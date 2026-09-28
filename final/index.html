@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Travel choices survey</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#18212B; --muted:#56606B; --line:#D3D9DF; --bg:#ECEFF1; --card:#FFFFFF;
+  --go:#0B6E4F; --go-weak:#E4F2EC; --go-dark:#07563D; --err:#B42318; --err-weak:#FDECEA; --route:#0B6E4F;
+  --r-lg:14px; --r-sm:8px;
+  font-size:17px;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-padding-top:env(safe-area-inset-top,0px);scroll-padding-bottom:110px}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:"Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;line-height:1.5;
+  padding-top:env(safe-area-inset-top,0px);overflow-x:hidden}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important;animation:none!important}}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding:10px 16px 8px}
+.top-inner,.wrap{max-width:560px;margin:0 auto}
+.brandline{display:flex;justify-content:space-between;align-items:baseline;font-size:.8rem;color:var(--muted)}
+.bar{height:6px;border-radius:3px;background:#D6DCE1;margin-top:6px;overflow:hidden}
+.bar>i{display:block;height:100%;width:0;background:var(--go);transition:width .3s}
+.wrap{padding:6px 16px 140px}
+h1{font-size:1.6rem;line-height:1.2;margin:.4rem 0 .8rem;letter-spacing:-.01em}
+h2{font-size:1.2rem;line-height:1.3;margin:1.4rem 0 .5rem}
+p{margin:.5rem 0 .9rem;max-width:62ch}
+.lead{font-size:1.06rem}
+.muted{color:var(--muted)}
+.small{font-size:.86rem}
+.panel{background:var(--card);border-radius:var(--r-lg);padding:16px;margin:12px 0;border:1px solid var(--line)}
+.note{border-left:4px solid var(--ink);background:#fff;padding:10px 14px;border-radius:0 var(--r-sm) var(--r-sm) 0;margin:14px 0}
+ul.plain{padding-left:1.1rem;margin:.3rem 0 .9rem} ul.plain li{margin:.25rem 0}
+
+/* questions */
+.q{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);padding:14px 14px 12px;margin:14px 0}
+.q.has-error{border-color:var(--err);box-shadow:0 0 0 2px var(--err-weak)}
+.q legend,.q .qlabel{font-weight:700;font-size:1.02rem;margin-bottom:8px;display:block;padding:0}
+.q fieldset{border:0;margin:0;padding:0;min-width:0}
+.q .hint{font-size:.86rem;color:var(--muted);margin:-4px 0 8px}
+.err{display:none;color:var(--err);font-size:.9rem;font-weight:700;margin-top:6px}
+.q.has-error .err{display:block}
+.opt{display:flex;align-items:center;gap:12px;width:100%;min-height:52px;text-align:left;margin:6px 0;padding:10px 14px;
+  border:1.5px solid var(--line);border-radius:10px;background:#fff;font:inherit;color:inherit;cursor:pointer}
+.opt::before{content:"";flex:0 0 20px;height:20px;border-radius:50%;border:2px solid #8A949E;background:#fff}
+.opt[aria-checked="true"]{border-color:var(--go);background:var(--go-weak)}
+.opt[aria-checked="true"]::before{border-color:var(--go);background:radial-gradient(circle,var(--go) 0 5px,#fff 6px)}
+select,textarea{width:100%;font:inherit;padding:12px;border:1.5px solid var(--line);border-radius:10px;background:#fff;color:inherit}
+select{min-height:52px}
+textarea{min-height:90px;resize:vertical}
+.scale{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.scale .opt{justify-content:center;padding:10px 0}
+.scale .opt::before{display:none}
+.feedback{margin-top:8px;padding:10px 12px;border-radius:10px;font-size:.95rem}
+.feedback.ok{background:var(--go-weak)} .feedback.no{background:#FFF4E5}
+
+/* explain */
+.pods{display:grid;gap:12px;margin:12px 0}
+.pod{background:#fff;border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden}
+.pod img{display:block;width:100%;height:auto;background:#f3f3f3}
+.pod div{padding:10px 14px 12px}
+.pod h3{margin:0 0 2px;font-size:1.05rem}
+.pod p{margin:0;font-size:.95rem}
+@media (min-width:520px){.pods{grid-template-columns:1fr 1fr}}
+.concepts{display:grid;gap:10px;margin:10px 0}
+.concepts div{background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 14px}
+.concepts b{display:block}
+.hero{margin:6px 0 14px}
+.hero img{display:block;width:100%;height:auto;border-radius:var(--r-lg);background:#DDE3E8}
+.hero figcaption{font-size:.8rem;color:var(--muted);margin-top:6px}
+
+/* map */
+.map-fallback{height:300px;border-radius:var(--r-lg);border:1px solid var(--line);background:#fff;margin:10px 0 4px;overflow:hidden}
+.map-fallback svg{width:100%;height:100%;display:block}
+.routemap{margin:10px 0 4px}
+.routemap a{display:block;border-radius:var(--r-lg);overflow:hidden;border:1px solid var(--line);background:#F6F5F1}
+.routemap img{display:block;width:100%;height:auto}
+.routemap figcaption{font-size:.84rem;color:var(--muted);margin-top:6px}
+.stop-label{background:#fff;border:1.5px solid var(--ink);border-radius:6px;padding:1px 6px;font-weight:700;font-size:12px;white-space:nowrap;box-shadow:none}
+.stop-label::before{display:none}
+
+/* choice tables: one row per option, one column per attribute */
+.trip{display:flex;align-items:center;gap:8px;font-size:.84rem;color:var(--muted);margin:0 0 4px}
+.trip .count{margin-left:auto;white-space:nowrap;font-weight:700;color:var(--ink)}
+.trip svg{flex:0 0 auto}
+.task-q{font-size:1.15rem;margin:.1rem 0 .2rem}
+.task-help{font-size:.86rem;color:var(--muted);margin:0 0 8px}
+.wrap.tight{padding-left:8px;padding-right:8px}
+.wrap.tight .trip,.wrap.tight .task-q,.wrap.tight .task-help,.wrap.tight .count,.wrap.tight .context{margin-left:8px;margin-right:8px}
+.cmp{--cols:28px 68px minmax(40px,.9fr) minmax(54px,1.2fr) 68px 30px 30px 34px;
+  background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden}
+.cmp.b{--cols:30px minmax(0,1.6fr) minmax(0,1.1fr) minmax(0,.95fr) minmax(0,1.1fr)}
+.cmp.b .c-key .num{font-size:.98rem}
+.cmp-head,.crow{display:grid;grid-template-columns:var(--cols)}
+.cmp-head{background:#F4F6F7;border-bottom:2px solid var(--ink);font-size:.7rem;line-height:1.2;color:var(--muted);font-weight:700}
+.cmp-head>div{padding:7px 2px;display:flex;align-items:flex-end;justify-content:center;text-align:center}
+.cmp-head .h-opt{grid-row:1/3;grid-column:1/3;justify-content:flex-start;padding-left:10px}
+.cmp-head .h-key{grid-row:1/3;color:var(--ink);font-size:.76rem;background:#E7EFEA}
+.cmp-head .h-share{grid-row:1/3;border-left:1px solid var(--line)}
+.cmp-head .h-group{grid-column:6/9;border-left:1px solid var(--line);border-bottom:1px solid var(--line);padding-bottom:4px;font-weight:400}
+.cmp-head .h-sub{font-weight:400;padding-top:4px}
+.cmp-head .h-sub{border-left:1px solid var(--line)}
+.crow{width:100%;margin:0;padding:0;border:0;border-top:1px solid var(--line);background:var(--card);font:inherit;color:inherit;
+  cursor:pointer;text-align:center;position:relative;min-height:58px}
+.crow:first-of-type{border-top:0}
+.crow>.c{padding:6px 2px;display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:0}
+.crow .c-key{background:#F3F8F5}
+.crow .c-share{border-left:1px solid var(--line)}
+.crow .c-sub{border-left:1px solid var(--line)}          /* lines between walk, wait and travel */
+.crow .c-sub.first{border-left-color:#AEB6BD}
+.crow .c-opt{align-items:flex-start;text-align:left;padding-left:2px;gap:4px}
+.crow>.c-radio{padding:0 0 0 6px;align-items:center}
+.crow .c-opt .pic{position:relative;width:54px;height:33px;border-radius:6px;overflow:hidden;background:#EEF1F3;flex:0 0 auto}
+.crow .c-opt .pic img,.crow .c-opt .pic svg{display:block;width:100%;height:100%;object-fit:cover}
+.crow .c-opt b{font-size:.72rem;line-height:1.15;hyphens:auto;-webkit-hyphens:auto}
+.crow .num{font-weight:700;font-size:1.02rem;line-height:1.1}
+.crow .c-key .num{font-size:1.08rem;white-space:nowrap}
+.crow .c-price .num{font-size:.95rem}
+.crow .unit{font-size:.68rem;color:var(--muted);line-height:1.1}
+.crow .c-sub .num{font-weight:400;font-size:.98rem}
+.crow .na{color:#9AA3AB;font-size:.95rem}
+.crow .shr{font-size:.72rem;line-height:1.15;margin-top:3px}
+.crow .tag{display:block;overflow-wrap:anywhere;margin-top:4px;padding:1px 4px;border-radius:5px;background:#E9EDF0;font-size:.64rem;line-height:1.25;font-weight:700;max-width:100%}
+.radio{flex:0 0 22px;width:22px;height:22px;border-radius:50%;border:2.5px solid #6B757F;background:#fff;display:grid;place-items:center}
+.crow[aria-checked="true"]{background:var(--go-weak);box-shadow:inset 5px 0 0 var(--go),inset 0 0 0 2px var(--go)}
+.crow[aria-checked="true"] .c-key{background:rgba(11,110,79,.1)}
+.crow[aria-checked="true"] .radio{background:var(--go);border-color:var(--go)}
+.crow[aria-checked="true"] .radio::after{content:"";width:6px;height:11px;border:solid #fff;border-width:0 2.5px 2.5px 0;transform:rotate(45deg) translate(-1px,-1px)}
+.crow[aria-disabled="true"] .radio{border-color:#C3C9CE;background:#EEF1F3}
+.crow[aria-disabled="true"]{cursor:not-allowed;background:#F4F6F7}
+.crow[aria-disabled="true"]>.c{opacity:.4}
+.crow[aria-disabled="true"] .c-opt,.crow[aria-disabled="true"] .c-radio{opacity:1}
+.crow[aria-disabled="true"] .c-opt .off{font-size:.66rem;color:var(--err);font-weight:700;line-height:1.15}
+.crow:focus-visible{outline:3px solid #1B4DB3;outline-offset:-3px}
+.cmp.b .crow .c-opt{padding:10px 6px 10px 4px;justify-content:center}
+.cmp.b .crow .c-opt b{font-size:.86rem}
+.cmp.b .cmp-head>div{grid-row:auto}
+.seats{display:inline-flex;gap:2px;align-items:flex-end}
+.seats i{width:7px;height:7px;border-radius:2px;border:1.2px solid var(--ink)}
+.seats i.st{width:5px;height:11px;border-radius:3px}
+.seats i.st1{margin-left:3px}
+.seats i.full{background:var(--ink)}
+.crow .seat-txt{font-size:.66rem;line-height:1.15;margin-top:2px;color:var(--muted)}
+.crow .seat-txt.standing{color:#8A4B00;font-weight:700}
+.legend{font-size:.78rem;color:var(--muted);margin:10px 8px 0;line-height:1.45}
+.legend p{margin:0 0 4px;max-width:none}
+.legend .seats{vertical-align:middle;margin:0 1px}
+.context{background:#fff;border:1px solid var(--line);border-left:4px solid var(--ink);border-radius:var(--r-sm);padding:10px 14px;margin:6px 0 12px}
+.count{margin:0}
+@media (max-width:370px){
+  .cmp{--cols:26px 64px minmax(38px,.9fr) minmax(50px,1.2fr) 62px 27px 27px 32px}
+  .crow .tag{font-size:.6rem}
+  .crow>.c{padding-top:5px;padding-bottom:5px}
+  .crow .c-opt .pic{width:48px;height:29px}
+  .radio{flex-basis:20px;width:20px;height:20px}
+  .crow .c-price .num{font-size:.88rem}
+  .crow .c-opt b{font-size:.64rem}
+  .cmp-head .h-sub{font-size:.6rem;padding-left:0;padding-right:0}
+  .crow .num{font-size:.95rem} .crow .c-key .num{font-size:1rem} .crow .c-sub .num{font-size:.9rem}
+}
+@media (min-width:540px){
+  .cmp{--cols:40px 110px 1fr 1fr 96px 1fr 1fr 1fr}
+  .crow .c-opt .pic{width:88px;height:54px}
+  .crow .c-opt b{font-size:.84rem}
+  .cmp-head{font-size:.78rem}
+  .seats i{width:9px;height:9px}
+  .seats i.st{width:6px;height:14px}
+}
+
+/* footer */
+.foot{position:fixed;left:0;right:0;bottom:0;z-index:6;background:rgba(236,239,241,.96);border-top:1px solid var(--line);
+  padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px))}
+.foot .row{max-width:560px;margin:0 auto;display:flex;gap:10px}
+.btn{font:inherit;font-weight:700;border-radius:12px;min-height:54px;padding:0 18px;cursor:pointer;border:2px solid transparent}
+.btn-main{flex:1;background:var(--go);color:#fff}
+.btn-main:disabled{background:#AEB7BF;cursor:not-allowed}
+.btn-main.pulse{animation:pulse .6s ease-out 1}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(11,110,79,.45)}100%{box-shadow:0 0 0 14px rgba(11,110,79,0)}}
+.btn-back{background:#fff;color:var(--ink);border-color:var(--line)}
+.btn-inline{width:100%;background:var(--go);color:#fff;margin-top:8px}
+.hidden{display:none!important}
+:focus-visible{outline:3px solid #1B4DB3;outline-offset:2px}
+.modal-bg{position:fixed;inset:0;z-index:30;background:rgba(24,33,43,.55);display:flex;align-items:flex-end;justify-content:center;padding:16px}
+.modal{background:#fff;border-radius:16px;max-width:520px;width:100%;padding:20px 18px calc(16px + env(safe-area-inset-bottom,0px));box-shadow:0 10px 30px rgba(0,0,0,.25)}
+.modal h2{margin:0 0 6px;font-size:1.25rem}
+.modal p{margin:0 0 16px}
+.modal .mbtns{display:flex;flex-direction:column;gap:10px}
+.modal .btn{width:100%}
+@media (min-width:540px){.modal-bg{align-items:center}}
+.again{margin-top:26px;border-top:1px solid var(--line);padding-top:16px}
+.again .btn{width:100%;margin-top:6px}
+.ref{font-size:1.4rem;font-weight:700;letter-spacing:.04em;background:#fff;border:1.5px dashed var(--ink);padding:10px 14px;border-radius:10px;display:inline-block}
+.alert{background:var(--err-weak);border:1.5px solid var(--err);color:#5c130c;border-radius:10px;padding:12px 14px;margin:10px 0}
+.sending{display:flex;align-items:center;gap:10px}
+.spin{width:20px;height:20px;border-radius:50%;border:3px solid #cfd6dc;border-top-color:var(--go);animation:sp 1s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+[hidden]{display:none!important}
+
+</style>
+</head>
+<body>
+<header class="top" aria-label="Progress">
+  <div class="top-inner">
+    <div class="brandline"><span>Travel choices survey</span><span id="stepText"></span></div>
+    <div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" id="bar"><i id="barFill"></i></div>
+  </div>
+</header>
+<main class="wrap" id="main" tabindex="-1"></main>
+<footer class="foot" id="foot">
+  <div class="row">
+    <button class="btn btn-back" id="backBtn" type="button">Back</button>
+    <button class="btn btn-main" id="nextBtn" type="button">Next</button>
+  </div>
+</footer>
+<div class="modal-bg" id="modal" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle" aria-describedby="mText">
+    <h2 id="mTitle"></h2><p id="mText"></p>
+    <div class="mbtns"><button class="btn btn-main" id="mYes" type="button"></button><button class="btn btn-back" id="mNo" type="button"></button></div>
+  </div>
+</div>
+
+
+<script>
+"use strict";
+const CFG = {"mode":"final","version":"1.2.1","design_version":"8658c41be3","endpoint":"","contact":"hussein.falih25@imperial.ac.uk","gameB_enabled":true,"pilot_questions":false,"booked_fare":2.5,"pt_label":"Bus to Morden, then Underground (1 change)","route":[[51.3594,-0.1914,"Sutton","right"],[51.3627,-0.1937],[51.369,-0.1929],[51.3752,-0.19],[51.379,-0.185],[51.3799,-0.182,"St Helier Hospital","right"],[51.3848,-0.1858],[51.3925,-0.1903],[51.4,-0.194],[51.4022,-0.1948],[51.409,-0.1927],[51.4153,-0.192,"South Wimbledon","right"]],"static_map":"img/route_map.png","design":{"gameA":[{"task_id":1,"block":1,"is_holdout":0,"pers_acc":3,"pers_wait":5,"pers_ivt":10,"pers_fare":6.0,"shar_acc":3,"shar_wait":5,"shar_ivt":10,"shar_fare":3.0,"shar_occ":5,"concept":1,"pt_acc":10,"pt_wait":5,"pt_ivt":30,"taxi_acc":0,"taxi_wait":7,"taxi_ivt":17,"taxi_fare":17.5,"car_acc":8,"car_ivt":21,"car_cost":6.5,"pt_fare":4.05},{"task_id":2,"block":1,"is_holdout":0,"pers_acc":9,"pers_wait":5,"pers_ivt":14,"pers_fare":6.0,"shar_acc":9,"shar_wait":5,"shar_ivt":14,"shar_fare":2.5,"shar_occ":5,"concept":1,"pt_acc":6,"pt_wait":5,"pt_ivt":21,"taxi_acc":2,"taxi_wait":3,"taxi_ivt":17,"taxi_fare":27.5,"car_acc":2,"car_ivt":21,"car_cost":6.5,"pt_fare":4.05},{"task_id":3,"block":1,"is_holdout":0,"pers_acc":9,"pers_wait":3,"pers_ivt":14,"pers_fare":3.0,"shar_acc":9,"shar_wait":3,"shar_ivt":14,"shar_fare":2.5,"shar_occ":2,"concept":1,"pt_acc":10,"pt_wait":7,"pt_ivt":30,"taxi_acc":0,"taxi_wait":11,"taxi_ivt":14,"taxi_fare":17.5,"car_acc":5,"car_ivt":14,"car_cost":10.0,"pt_fare":4.05},{"task_id":4,"block":1,"is_holdout":0,"pers_acc":9,"pers_wait":1,"pers_ivt":14,"pers_fare":6.0,"shar_acc":9,"shar_wait":8,"shar_ivt":14,"shar_fare":3.0,"shar_occ":4,"concept":-1,"pt_acc":10,"pt_wait":11,"pt_ivt":25,"taxi_acc":2,"taxi_wait":7,"taxi_ivt":14,"taxi_fare":22.0,"car_acc":2,"car_ivt":14,"car_cost":6.5,"pt_fare":4.05},{"task_id":5,"block":1,"is_holdout":0,"pers_acc":3,"pers_wait":5,"pers_ivt":10,"pers_fare":6.0,"shar_acc":3,"shar_wait":8,"shar_ivt":10,"shar_fare":1.5,"shar_occ":2,"concept":1,"pt_acc":10,"pt_wait":5,"pt_ivt":21,"taxi_acc":0,"taxi_wait":3,"taxi_ivt":17,"taxi_fare":22.0,"car_acc":2,"car_ivt":21,"car_cost":6.5,"pt_fare":4.05},{"task_id":6,"block":1,"is_holdout":0,"pers_acc":6,"pers_wait":5,"pers_ivt":14,"pers_fare":4.0,"shar_acc":6,"shar_wait":5,"shar_ivt":14,"shar_fare":1.5,"shar_occ":3,"concept":1,"pt_acc":6,"pt_wait":11,"pt_ivt":25,"taxi_acc":2,"taxi_wait":7,"taxi_ivt":14,"taxi_fare":27.5,"car_acc":5,"car_ivt":14,"car_cost":10.0,"pt_fare":4.05},{"task_id":7,"block":1,"is_holdout":0,"pers_acc":9,"pers_wait":1,"pers_ivt":10,"pers_fare":3.0,"shar_acc":9,"shar_wait":8,"shar_ivt":10,"shar_fare":2.5,"shar_occ":2,"concept":1,"pt_acc":6,"pt_wait":11,"pt_ivt":25,"taxi_acc":0,"taxi_wait":7,"taxi_ivt":21,"taxi_fare":22.0,"car_acc":2,"car_ivt":21,"car_cost":10.0,"pt_fare":4.05},{"task_id":8,"block":1,"is_holdout":0,"pers_acc":3,"pers_wait":1,"pers_ivt":12,"pers_fare":6.0,"shar_acc":3,"shar_wait":8,"shar_ivt":12,"shar_fare":2.0,"shar_occ":2,"concept":-1,"pt_acc":6,"pt_wait":5,"pt_ivt":21,"taxi_acc":2,"taxi_wait":11,"taxi_ivt":17,"taxi_fare":22.0,"car_acc":2,"car_ivt":14,"car_cost":10.0,"pt_fare":4.05},{"task_id":9,"block":1,"is_holdout":0,"pers_acc":6,"pers_wait":3,"pers_ivt":12,"pers_fare":4.0,"shar_acc":6,"shar_wait":3,"shar_ivt":12,"shar_fare":2.5,"shar_occ":2,"concept":-1,"pt_acc":6,"pt_wait":5,"pt_ivt":25,"taxi_acc":0,"taxi_wait":3,"taxi_ivt":14,"taxi_fare":22.0,"car_acc":8,"car_ivt":14,"car_cost":6.5,"pt_fare":4.05},{"task_id":10,"block":1,"is_holdout":0,"pers_acc":9,"pers_wait":5,"pers_ivt":10,"pers_fare":3.0,"shar_acc":9,"shar_wait":5,"shar_ivt":10,"shar_fare":2.0,"shar_occ":4,"concept":-1,"pt_acc":6,"pt_wait":5,"pt_ivt":30,"taxi_acc":0,"taxi_wait":3,"taxi_ivt":21,"taxi_fare":17.5,"car_acc":5,"car_ivt":17,"car_cost":10.0,"pt_fare":4.05},{"task_id":11,"block":2,"is_holdout":0,"pers_acc":6,"pers_wait":3,"pers_ivt":14,"pers_fare":6.0,"shar_acc":6,"shar_wait":3,"shar_ivt":14,"shar_fare":1.5,"shar_occ":3,"concept":1,"pt_acc":10,"pt_wait":11,"pt_ivt":25,"taxi_acc":2,"taxi_wait":3,"taxi_ivt":21,"taxi_fare":17.5,"car_acc":2,"car_ivt":21,"car_cost":10.0,"pt_fare":4.05},{"task_id":12,"block":2,"is_holdout":0,"pers_acc":9,"pers_wait":3,"pers_ivt":14,"pers_fare":4.0,"shar_acc":9,"shar_wait":3,"shar_ivt":14,"shar_fare":3.0,"shar_occ":1,"concept":1,"pt_acc":6,"pt_wait":11,"pt_ivt":30,"taxi_acc":0,"taxi_wait":3,"taxi_ivt":14,"taxi_fare":22.0,"car_acc":5,"car_ivt":14,"car_cost":8.0,"pt_fare":4.05},{"task_id":13,"block":2,"is_holdout":0,"pers_acc":6,"pers_wait":5,"pers_ivt":12,"pers_fare":5.0,"shar_acc":6,"shar_wait":8,"shar_ivt":12,"shar_fare":3.0,"shar_occ":4,"concept":-1,"pt_acc":6,"pt_wait":5,"pt_ivt":21,"taxi_acc":0,"taxi_wait":11,"taxi_ivt":17,"taxi_fare":27.5,"car_acc":8,"car_ivt":21,"car_cost":8.0,"pt_fare":4.05},{"task_id":14,"block":2,"is_holdout":0,"pers_acc":3,"pers_wait":1,"pers_ivt":14,"pers_fare":6.0,"shar_acc":3,"shar_wait":8,"shar_ivt":14,"shar_fare":1.5,"shar_occ":4,"concept":1,"pt_acc":10,"pt_wait":7,"pt_ivt":30,"taxi_acc":0,"taxi_wait":7,"taxi_ivt":14,"taxi_fare":22.0,"car_acc":5,"car_ivt":14,"car_cost":6.5,"pt_fare":4.05},{"task_id":15,"block":2,"is_holdout":0,"pers_acc":6,"pers_wait":5,"pers_ivt":12,"pers_fare":4.0,"shar_acc":6,"shar_wait":5,"shar_ivt":12,"shar_fare":3.0,"shar_occ":1,"concept":-1,"pt_acc":10,"pt_wait":11,"pt_ivt":25,"taxi_acc":2,"taxi_wait":11,"taxi_ivt":14,"taxi_fare":27.5,"car_acc":5,"car_ivt":14,"car_cost":8.0,"pt_fare":4.05},{"task_id":16,"block":2,"is_holdout":0,"pers_acc":6,"pers_wait":5,"pers_ivt":10,"pers_fare":3.0,"shar_acc":6,"shar_wait":5,"shar_ivt":10,"shar_fare":2.5,"shar_occ":3,"concept":1,"pt_acc":6,"pt_wait":5,"pt_ivt":30,"taxi_acc":2,"taxi_wait":11,"taxi_ivt":17,"taxi_fare":22.0,"car_acc":8,"car_ivt":21,"car_cost":6.5,"pt_fare":4.05},{"task_id":17,"block":2,"is_holdout":0,"pers_acc":9,"pers_wait":3,"pers_ivt":10,"pers_fare":6.0,"shar_acc":9,"shar_wait":3,"shar_ivt":10,"shar_fare":1.5,"shar_occ":3,"concept":-1,"pt_acc":6,"pt_wait":5,"pt_ivt":30,"taxi_acc":0,"taxi_wait":11,"taxi_ivt":14,"taxi_fare":22.0,"car_acc":5,"car_ivt":14,"car_cost":10.0,"pt_fare":4.05},{"task_id":18,"block":2,"is_holdout":0,"pers_acc":9,"pers_wait":1,"pers_ivt":12,"pers_fare":5.0,"shar_acc":9,"shar_wait":8,"shar_ivt":12,"shar_fare":2.0,"shar_occ":5,"concept":1,"pt_acc":10,"pt_wait":11,"pt_ivt":21,"taxi_acc":0,"taxi_wait":3,"taxi_ivt":21,"taxi_fare":17.5,"car_acc":5,"car_ivt":21,"car_cost":8.0,"pt_fare":4.05},{"task_id":19,"block":2,"is_holdout":0,"pers_acc":3,"pers_wait":3,"pers_ivt":14,"pers_fare":3.0,"shar_acc":3,"shar_wait":3,"shar_ivt":14,"shar_fare":2.5,"shar_occ":1,"concept":-1,"pt_acc":6,"pt_wait":7,"pt_ivt":21,"taxi_acc":2,"taxi_wait":3,"taxi_ivt":14,"taxi_fare":17.5,"car_acc":2,"car_ivt":17,"car_cost":10.0,"pt_fare":4.05},{"task_id":20,"block":2,"is_holdout":0,"pers_acc":3,"pers_wait":1,"pers_ivt":12,"pers_fare":4.0,"shar_acc":3,"shar_wait":5,"shar_ivt":12,"shar_fare":2.5,"shar_occ":3,"concept":-1,"pt_acc":10,"pt_wait":5,"pt_ivt":21,"taxi_acc":2,"taxi_wait":3,"taxi_ivt":21,"taxi_fare":27.5,"car_acc":5,"car_ivt":21,"car_cost":6.5,"pt_fare":4.05},{"task_id":21,"block":3,"is_holdout":0,"pers_acc":3,"pers_wait":5,"pers_ivt":14,"pers_fare":5.0,"shar_acc":3,"shar_wait":5,"shar_ivt":14,"shar_fare":1.5,"shar_occ":5,"concept":1,"pt_acc":10,"pt_wait":5,"pt_ivt":21,"taxi_acc":0,"taxi_wait":3,"taxi_ivt":21,"taxi_fare":17.5,"car_acc":8,"car_ivt":17,"car_cost":6.5,"pt_fare":4.05},{"task_id":22,"block":3,"is_holdout":0,"pers_acc":6,"pers_wait":3,"pers_ivt":14,"pers_fare":5.0,"shar_acc":6,"shar_wait":3,"shar_ivt":14,"shar_fare":3.0,"shar_occ":1,"concept":-1,"pt_acc":10,"pt_wait":11,"pt_ivt":21,"taxi_acc":0,"taxi_wait":3,"taxi_ivt":17,"taxi_fare":17.5,"car_acc":8,"car_ivt":14,"car_cost":6.5,"pt_fare":4.05},{"task_id":23,"block":3,"is_holdout":0,"pers_acc":9,"pers_wait":3,"pers_ivt":10,"pers_fare":6.0,"shar_acc":9,"shar_wait":3,"shar_ivt":10,"shar_fare":1.5,"shar_occ":5,"concept":-1,"pt_acc":6,"pt_wait":7,"pt_ivt":30,"taxi_acc":2,"taxi_wait":3,"taxi_ivt":17,"taxi_fare":17.5,"car_acc":2,"car_ivt":21,"car_cost":6.5,"pt_fare":4.05},{"task_id":24,"block":3,"is_holdout":0,"pers_acc":9,"pers_wait":1,"pers_ivt":12,"pers_fare":4.0,"shar_acc":9,"shar_wait":8,"shar_ivt":12,"shar_fare":1.5,"shar_occ":1,"concept":1,"pt_acc":6,"pt_wait":7,"pt_ivt":30,"taxi_acc":2,"taxi_wait":7,"taxi_ivt":14,"taxi_fare":27.5,"car_acc":2,"car_ivt":14,"car_cost":8.0,"pt_fare":4.05},{"task_id":25,"block":3,"is_holdout":0,"pers_acc":6,"pers_wait":5,"pers_ivt":14,"pers_fare":5.0,"shar_acc":6,"shar_wait":8,"shar_ivt":14,"shar_fare":2.0,"shar_occ":3,"concept":1,"pt_acc":10,"pt_wait":5,"pt_ivt":25,"taxi_acc":0,"taxi_wait":3,"taxi_ivt":14,"taxi_fare":27.5,"car_acc":2,"car_ivt":14,"car_cost":8.0,"pt_fare":4.05},{"task_id":26,"block":3,"is_holdout":0,"pers_acc":9,"pers_wait":5,"pers_ivt":10,"pers_fare":5.0,"shar_acc":9,"shar_wait":5,"shar_ivt":10,"shar_fare":2.0,"shar_occ":5,"concept":1,"pt_acc":6,"pt_wait":7,"pt_ivt":30,"taxi_acc":0,"taxi_wait":11,"taxi_ivt":14,"taxi_fare":17.5,"car_acc":2,"car_ivt":17,"car_cost":8.0,"pt_fare":4.05},{"task_id":27,"block":3,"is_holdout":0,"pers_acc":6,"pers_wait":1,"pers_ivt":10,"pers_fare":3.0,"shar_acc":6,"shar_wait":8,"shar_ivt":10,"shar_fare":2.5,"shar_occ":1,"concept":-1,"pt_acc":10,"pt_wait":7,"pt_ivt":25,"taxi_acc":2,"taxi_wait":7,"taxi_ivt":21,"taxi_fare":22.0,"car_acc":2,"car_ivt":21,"car_cost":8.0,"pt_fare":4.05},{"task_id":28,"block":3,"is_holdout":0,"pers_acc":3,"pers_wait":1,"pers_ivt":14,"pers_fare":4.0,"shar_acc":3,"shar_wait":8,"shar_ivt":14,"shar_fare":2.0,"shar_occ":3,"concept":-1,"pt_acc":6,"pt_wait":7,"pt_ivt":25,"taxi_acc":2,"taxi_wait":7,"taxi_ivt":21,"taxi_fare":17.5,"car_acc":5,"car_ivt":17,"car_cost":10.0,"pt_fare":4.05},{"task_id":29,"block":3,"is_holdout":0,"pers_acc":9,"pers_wait":3,"pers_ivt":12,"pers_fare":5.0,"shar_acc":9,"shar_wait":3,"shar_ivt":12,"shar_fare":1.5,"shar_occ":4,"concept":-1,"pt_acc":6,"pt_wait":11,"pt_ivt":21,"taxi_acc":0,"taxi_wait":7,"taxi_ivt":17,"taxi_fare":17.5,"car_acc":8,"car_ivt":17,"car_cost":10.0,"pt_fare":4.05},{"task_id":30,"block":3,"is_holdout":0,"pers_acc":3,"pers_wait":5,"pers_ivt":12,"pers_fare":5.0,"shar_acc":3,"shar_wait":5,"shar_ivt":12,"shar_fare":3.0,"shar_occ":4,"concept":-1,"pt_acc":10,"pt_wait":7,"pt_ivt":21,"taxi_acc":2,"taxi_wait":11,"taxi_ivt":21,"taxi_fare":27.5,"car_acc":8,"car_ivt":21,"car_cost":8.0,"pt_fare":4.05},{"task_id":31,"block":4,"is_holdout":0,"pers_acc":9,"pers_wait":5,"pers_ivt":14,"pers_fare":3.0,"shar_acc":9,"shar_wait":8,"shar_ivt":14,"shar_fare":2.5,"shar_occ":5,"concept":-1,"pt_acc":10,"pt_wait":5,"pt_ivt":21,"taxi_acc":2,"taxi_wait":3,"taxi_ivt":14,"taxi_fare":17.5,"car_acc":8,"car_ivt":17,"car_cost":10.0,"pt_fare":4.05},{"task_id":32,"block":4,"is_holdout":0,"pers_acc":9,"pers_wait":3,"pers_ivt":14,"pers_fare":5.0,"shar_acc":9,"shar_wait":3,"shar_ivt":14,"shar_fare":3.0,"shar_occ":2,"concept":1,"pt_acc":6,"pt_wait":11,"pt_ivt":25,"taxi_acc":0,"taxi_wait":11,"taxi_ivt":14,"taxi_fare":17.5,"car_acc":2,"car_ivt":14,"car_cost":6.5,"pt_fare":4.05},{"task_id":33,"block":4,"is_holdout":0,"pers_acc":6,"pers_wait":5,"pers_ivt":12,"pers_fare":5.0,"shar_acc":6,"shar_wait":5,"shar_ivt":12,"shar_fare":3.0,"shar_occ":1,"concept":1,"pt_acc":6,"pt_wait":7,"pt_ivt":21,"taxi_acc":2,"taxi_wait":7,"taxi_ivt":17,"taxi_fare":17.5,"car_acc":8,"car_ivt":21,"car_cost":6.5,"pt_fare":4.05},{"task_id":34,"block":4,"is_holdout":0,"pers_acc":3,"pers_wait":5,"pers_ivt":10,"pers_fare":3.0,"shar_acc":3,"shar_wait":5,"shar_ivt":10,"shar_fare":2.0,"shar_occ":5,"concept":1,"pt_acc":10,"pt_wait":7,"pt_ivt":30,"taxi_acc":2,"taxi_wait":11,"taxi_ivt":14,"taxi_fare":27.5,"car_acc":5,"car_ivt":17,"car_cost":6.5,"pt_fare":4.05},{"task_id":35,"block":4,"is_holdout":0,"pers_acc":3,"pers_wait":1,"pers_ivt":14,"pers_fare":4.0,"shar_acc":3,"shar_wait":8,"shar_ivt":14,"shar_fare":3.0,"shar_occ":3,"concept":1,"pt_acc":10,"pt_wait":5,"pt_ivt":21,"taxi_acc":0,"taxi_wait":11,"taxi_ivt":17,"taxi_fare":22.0,"car_acc":2,"car_ivt":21,"car_cost":8.0,"pt_fare":4.05},{"task_id":36,"block":4,"is_holdout":0,"pers_acc":9,"pers_wait":5,"pers_ivt":10,"pers_fare":5.0,"shar_acc":9,"shar_wait":8,"shar_ivt":10,"shar_fare":2.0,"shar_occ":1,"concept":-1,"pt_acc":6,"pt_wait":5,"pt_ivt":30,"taxi_acc":2,"taxi_wait":3,"taxi_ivt":17,"taxi_fare":17.5,"car_acc":2,"car_ivt":14,"car_cost":10.0,"pt_fare":4.05},{"task_id":37,"block":4,"is_holdout":0,"pers_acc":9,"pers_wait":1,"pers_ivt":10,"pers_fare":6.0,"shar_acc":9,"shar_wait":8,"shar_ivt":10,"shar_fare":1.5,"shar_occ":5,"concept":-1,"pt_acc":10,"pt_wait":11,"pt_ivt":21,"taxi_acc":0,"taxi_wait":7,"taxi_ivt":14,"taxi_fare":22.0,"car_acc":2,"car_ivt":17,"car_cost":6.5,"pt_fare":4.05},{"task_id":38,"block":4,"is_holdout":0,"pers_acc":3,"pers_wait":3,"pers_ivt":14,"pers_fare":6.0,"shar_acc":3,"shar_wait":3,"shar_ivt":14,"shar_fare":1.5,"shar_occ":5,"concept":-1,"pt_acc":6,"pt_wait":11,"pt_ivt":30,"taxi_acc":0,"taxi_wait":7,"taxi_ivt":21,"taxi_fare":27.5,"car_acc":8,"car_ivt":17,"car_cost":10.0,"pt_fare":4.05},{"task_id":39,"block":4,"is_holdout":0,"pers_acc":3,"pers_wait":3,"pers_ivt":10,"pers_fare":5.0,"shar_acc":3,"shar_wait":3,"shar_ivt":10,"shar_fare":3.0,"shar_occ":3,"concept":-1,"pt_acc":6,"pt_wait":11,"pt_ivt":25,"taxi_acc":0,"taxi_wait":3,"taxi_ivt":17,"taxi_fare":27.5,"car_acc":8,"car_ivt":14,"car_cost":8.0,"pt_fare":4.05},{"task_id":40,"block":4,"is_holdout":0,"pers_acc":6,"pers_wait":1,"pers_ivt":12,"pers_fare":6.0,"shar_acc":6,"shar_wait":8,"shar_ivt":12,"shar_fare":1.5,"shar_occ":1,"concept":1,"pt_acc":6,"pt_wait":5,"pt_ivt":30,"taxi_acc":0,"taxi_wait":7,"taxi_ivt":21,"taxi_fare":22.0,"car_acc":8,"car_ivt":17,"car_cost":6.5,"pt_fare":4.05},{"task_id":41,"block":1,"is_holdout":1,"pers_acc":6,"pers_wait":3,"pers_ivt":12,"pers_fare":4.0,"shar_acc":6,"shar_wait":5,"shar_ivt":12,"shar_fare":2.0,"shar_occ":2,"concept":-1,"pt_acc":6,"pt_wait":7,"pt_ivt":25,"taxi_acc":2,"taxi_wait":7,"taxi_ivt":17,"taxi_fare":22.0,"car_acc":5,"car_ivt":17,"car_cost":8.0,"pt_fare":4.05},{"task_id":42,"block":2,"is_holdout":1,"pers_acc":6,"pers_wait":3,"pers_ivt":12,"pers_fare":5.0,"shar_acc":6,"shar_wait":5,"shar_ivt":12,"shar_fare":2.5,"shar_occ":1,"concept":1,"pt_acc":6,"pt_wait":7,"pt_ivt":25,"taxi_acc":2,"taxi_wait":7,"taxi_ivt":17,"taxi_fare":22.0,"car_acc":5,"car_ivt":17,"car_cost":8.0,"pt_fare":4.05},{"task_id":43,"block":3,"is_holdout":1,"pers_acc":6,"pers_wait":3,"pers_ivt":12,"pers_fare":3.0,"shar_acc":6,"shar_wait":5,"shar_ivt":12,"shar_fare":1.5,"shar_occ":4,"concept":1,"pt_acc":6,"pt_wait":7,"pt_ivt":25,"taxi_acc":2,"taxi_wait":7,"taxi_ivt":17,"taxi_fare":22.0,"car_acc":5,"car_ivt":17,"car_cost":8.0,"pt_fare":4.05},{"task_id":44,"block":4,"is_holdout":1,"pers_acc":6,"pers_wait":3,"pers_ivt":12,"pers_fare":6.0,"shar_acc":6,"shar_wait":5,"shar_ivt":12,"shar_fare":3.0,"shar_occ":5,"concept":-1,"pt_acc":6,"pt_wait":7,"pt_ivt":25,"taxi_acc":2,"taxi_wait":7,"taxi_ivt":17,"taxi_fare":22.0,"car_acc":5,"car_ivt":17,"car_cost":8.0,"pt_fare":4.05}],"gameB":[{"b_task_id":1,"block":1,"now_occ":3,"next_occ":1,"next_wait":9,"upgrade_extra":3.0,"booked_fare":2.5},{"b_task_id":2,"block":1,"now_occ":3,"next_occ":0,"next_wait":9,"upgrade_extra":1.0,"booked_fare":2.5},{"b_task_id":3,"block":1,"now_occ":1,"next_occ":0,"next_wait":3,"upgrade_extra":1.0,"booked_fare":2.5},{"b_task_id":4,"block":1,"now_occ":2,"next_occ":1,"next_wait":3,"upgrade_extra":3.0,"booked_fare":2.5},{"b_task_id":5,"block":2,"now_occ":3,"next_occ":0,"next_wait":3,"upgrade_extra":3.0,"booked_fare":2.5},{"b_task_id":6,"block":2,"now_occ":3,"next_occ":1,"next_wait":9,"upgrade_extra":1.0,"booked_fare":2.5},{"b_task_id":7,"block":2,"now_occ":2,"next_occ":1,"next_wait":3,"upgrade_extra":1.0,"booked_fare":2.5},{"b_task_id":8,"block":2,"now_occ":1,"next_occ":0,"next_wait":9,"upgrade_extra":3.0,"booked_fare":2.5},{"b_task_id":9,"block":3,"now_occ":3,"next_occ":0,"next_wait":9,"upgrade_extra":3.0,"booked_fare":2.5},{"b_task_id":10,"block":3,"now_occ":3,"next_occ":0,"next_wait":3,"upgrade_extra":1.0,"booked_fare":2.5},{"b_task_id":11,"block":3,"now_occ":2,"next_occ":1,"next_wait":9,"upgrade_extra":1.0,"booked_fare":2.5},{"b_task_id":12,"block":3,"now_occ":1,"next_occ":0,"next_wait":3,"upgrade_extra":3.0,"booked_fare":2.5},{"b_task_id":13,"block":4,"now_occ":1,"next_occ":0,"next_wait":9,"upgrade_extra":1.0,"booked_fare":2.5},{"b_task_id":14,"block":4,"now_occ":2,"next_occ":1,"next_wait":9,"upgrade_extra":3.0,"booked_fare":2.5},{"b_task_id":15,"block":4,"now_occ":3,"next_occ":0,"next_wait":6,"upgrade_extra":3.0,"booked_fare":2.5},{"b_task_id":16,"block":4,"now_occ":3,"next_occ":1,"next_wait":3,"upgrade_extra":1.0,"booked_fare":2.5}]}};
+const KEY = "gw_sp_" + CFG.mode + "_" + CFG.version;
+const $ = (s, el = document) => el.querySelector(s);
+const $$ = (s, el = document) => Array.from(el.querySelectorAll(s));
+const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const smooth = reduceMotion ? "auto" : "smooth";
+const money = v => "£" + Number(v).toFixed(2);
+const mins = v => v === 0 ? "None" : v + " min";
+const TEST =  false;
+
+/* ------------------------------------------------------------ questions */
+const BOROUGHS = ["Barking and Dagenham","Barnet","Bexley","Brent","Bromley","Camden","City of London","Croydon","Ealing",
+  "Enfield","Greenwich","Hackney","Hammersmith and Fulham","Haringey","Harrow","Havering","Hillingdon","Hounslow",
+  "Islington","Kensington and Chelsea","Kingston upon Thames","Lambeth","Lewisham","Merton","Newham","Redbridge",
+  "Richmond upon Thames","Southwark","Sutton","Tower Hamlets","Waltham Forest","Wandsworth","Westminster"];
+const Q = {
+  age18: {label:"Are you aged 18 or over?", opts:[[1,"Yes"],[2,"No"]]},
+  london: {label:"Do you live or work in London?", opts:[[1,"I live in London"],[2,"I work in London"],[3,"I live and work in London"],[4,"Neither"]]},
+  borough: {label:"Which London borough do you live in?", hint:"If you live outside London, choose the last option.", type:"select",
+    opts: BOROUGHS.map((b, i) => [i + 1, b]).concat([[34, "I live outside London"]])},
+  familiarity: {label:"How well do you know Sutton, St Helier or South Wimbledon?", opts:[[1,"Not at all"],[2,"A little"],[3,"Quite well"],[4,"Very well"]]},
+  usual_mode: {label:"How do you usually travel on weekdays?", hint:"Choose the one you use most.", opts:[[1,"Walk"],[2,"Cycle or e-scooter"],[3,"Bus"],[4,"Underground, Overground or train"],[5,"Drive a car"],[6,"Car passenger"],[7,"Taxi or ride-hailing app"],[8,"Something else"]]},
+  purpose: {label:"What is the main reason for most of your weekday trips?", opts:[[1,"Travel to work"],[2,"Travel for work, such as meetings"],[3,"Education"],[4,"Shopping or leisure"],[5,"Health appointments"],[6,"Something else"]]},
+  income: {label:"What is your household's total income per year, before tax?", hint:"A rough band is fine.", opts:[[1,"Under £25,000"],[2,"£25,000 to £49,999"],[3,"£50,000 to £74,999"],[4,"£75,000 to £99,999"],[5,"£100,000 to £149,999"],[6,"£150,000 or more"],[9,"Prefer not to say"]]},
+  concession: {label:"Do you have a travel concession?", opts:[[1,"No"],[2,"Freedom Pass or 60+ Oyster"],[3,"Student or Zip card"],[4,"Disabled person's pass"],[5,"Another concession"],[9,"Prefer not to say"]]},
+  car_own: {label:"How many cars or vans does your household own or have regular use of?", hint:"Include company cars.", opts:[[1,"None"],[2,"One"],[3,"Two or more"]]},
+  licence: {label:"Do you have a full driving licence?", opts:[[1,"Yes"],[2,"No"]]},
+  car_avail: {label:"Could you use a car for a trip like this?", opts:[[1,"Yes, always"],[2,"Sometimes"],[3,"No"]], showIf: a => a.licence === 1},
+  group_size: {label:"When you make local trips with friends or family, how many of you usually travel together?", hint:"Count yourself too.", opts:[[1,"I nearly always travel alone"],[2,"2 people"],[3,"3 people"],[4,"4 people"],[5,"5 or 6 people"]]},
+  group3_share: {label:"Up to what price each would your group choose the Shared pod?", hint:"The Personal pod costs £5 each.", opts:[[1,"£5 each, the same as the Personal pod"],[2,"£4 each (saving £1 each)"],[3,"£3 each (saving £2 each)"],[4,"Only at £2 each or less (saving £3 or more each)"],[5,"We would not share, even if it was cheaper"],[9,"Not sure"]]},
+  comprehension: {label:"In a Shared Glydways pod, what happens during your trip?", opts:[[1,"It stops on the way to pick up more people"],[2,"It goes straight to your destination with the people already on board"],[3,"It follows a bus route and stops at every stop"]]},
+  age_band: {label:"How old are you?", opts:[[1,"18 to 24"],[2,"25 to 34"],[3,"35 to 44"],[4,"45 to 54"],[5,"55 to 64"],[6,"65 or over"]]},
+  gender: {label:"How would you describe your gender?", opts:[[1,"Woman"],[2,"Man"],[3,"In another way"],[9,"Prefer not to say"]]},
+  employment: {label:"What is your work status?", opts:[[1,"Employed full-time"],[2,"Employed part-time"],[3,"Self-employed"],[4,"Student"],[5,"Retired"],[6,"Not working"],[7,"Something else"]]},
+  pilot_clear: {label:"Was anything in the survey hard to understand?", opts:[[1,"No, it was clear"],[2,"Yes, something was unclear"]]},
+  pilot_realism: {label:"How realistic did the travel options feel?", hint:"1 = not at all, 5 = very realistic", type:"scale", opts:[[1,"1"],[2,"2"],[3,"3"],[4,"4"],[5,"5"]]},
+  pilot_comment: {label:"Anything we should change? (optional)", type:"text", optional:true}
+};
+
+/* ------------------------------------------------------------ state */
+function rid() {
+  const a = new Uint8Array(6); (window.crypto || window.msCrypto).getRandomValues(a);
+  return "R-" + Array.from(a, b => b.toString(36).toUpperCase().padStart(2, "0")).join("").slice(0, 10) + "-" + Date.now().toString(36).toUpperCase().slice(-4);
+}
+function shuffle(x) { const a = x.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+function newState() {
+  return {rid: rid(), block: null, block_source: "", started_at: new Date().toISOString(), screen: 0, answers: {},
+    choiceA: {}, choiceB: {}, rt: {}, orderA: [], orderB: [], submitted: false, ref: "", is_test: TEST ? 1 : 0, out: null};
+}
+function load() { try { return JSON.parse(localStorage.getItem(KEY)); } catch (e) { return null; } }
+function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
+let S = load() || newState();
+if (TEST) S.is_test = 1;
+if (S._sendState === "sending") S._sendState = "error";   // page was closed mid-send
+
+function assignBlock(done) {
+  if (S.block) return done();
+  const setOrder = () => {
+    const est = CFG.design.gameA.filter(t => t.block === S.block && !t.is_holdout).map(t => t.task_id);
+    const hold = CFG.design.gameA.filter(t => t.block === S.block && t.is_holdout).map(t => t.task_id);
+    const order = shuffle(est); order.splice(5, 0, ...hold);            // holdout shown 6th
+    S.orderA = order;
+    S.orderB = CFG.gameB_enabled ? shuffle(CFG.design.gameB.filter(t => t.block === S.block).map(t => t.b_task_id)) : [];
+    save(); buildScreens(); done();
+  };
+  const fallback = () => { if (!S.block) { S.block = 1 + Math.floor(Math.random() * 4); S.block_source = "random"; setOrder(); } };
+  if (!CFG.endpoint) return fallback();
+  const ctl = new AbortController(); const timer = setTimeout(() => ctl.abort(), 2500);
+  fetch(CFG.endpoint + "?action=block", {signal: ctl.signal}).then(r => r.json()).then(j => {
+    clearTimeout(timer);
+    if (!S.block && j && [1, 2, 3, 4].includes(j.block)) { S.block = j.block; S.block_source = "server"; setOrder(); } else fallback();
+  }).catch(() => { clearTimeout(timer); fallback(); });
+}
+
+/* ------------------------------------------------------------ screens */
+let SCREENS = [];
+function buildScreens() {
+  SCREENS = ["consent", "eligibility", "travel", "household", "about", "explain", "comprehension", "journey"];
+  S.orderA.forEach((id, i) => SCREENS.push("A:" + i));
+  if (S.orderB.length) { SCREENS.push("bintro"); S.orderB.forEach((id, i) => SCREENS.push("B:" + i)); }
+  SCREENS.push("party");
+  if (CFG.pilot_questions) SCREENS.push("pilot");
+  SCREENS.push("submit");
+}
+buildScreens();
+
+const taskA = i => CFG.design.gameA.find(t => t.task_id === S.orderA[i]);
+const taskB = i => CFG.design.gameB.find(t => t.b_task_id === S.orderB[i]);
+const carOK = () => S.answers.licence === 1 && [1, 2].includes(S.answers.car_avail);
+
+function qHTML(id) {
+  const q = Q[id]; const a = S.answers[id];
+  if (q.showIf && !q.showIf(S.answers)) return "";
+  let inner;
+  if (q.type === "select") {
+    inner = `<select id="sel_${id}" data-q="${id}" aria-describedby="err_${id}"><option value="">Choose…</option>` +
+      q.opts.map(o => `<option value="${o[0]}" ${a === o[0] ? "selected" : ""}>${o[1]}</option>`).join("") + `</select>`;
+    return `<div class="q" id="q_${id}"><label class="qlabel" for="sel_${id}">${q.label}</label>${q.hint ? `<p class="hint">${q.hint}</p>` : ""}${inner}<p class="err" id="err_${id}">Please choose an answer.</p></div>`;
+  }
+  if (q.type === "text") {
+    return `<div class="q" id="q_${id}"><label class="qlabel" for="txt_${id}">${q.label}</label><textarea id="txt_${id}" data-q="${id}" maxlength="600">${a ? String(a).replace(/</g, "&lt;") : ""}</textarea></div>`;
+  }
+  inner = `<div role="radiogroup" aria-labelledby="lab_${id}" class="${q.type === "scale" ? "scale" : ""}">` + q.opts.map(o =>
+    `<button type="button" class="opt" role="radio" aria-checked="${a === o[0]}" data-q="${id}" data-v="${o[0]}">${o[1]}</button>`).join("") + `</div>`;
+  return `<div class="q" id="q_${id}"><fieldset><legend id="lab_${id}">${q.label}</legend>${q.hint ? `<p class="hint">${q.hint}</p>` : ""}${inner}</fieldset><p class="err">Please choose an answer.</p>${id === "comprehension" ? feedbackHTML() : ""}</div>`;
+}
+function feedbackHTML() {
+  const a = S.answers.comprehension_seen;
+  if (!a) return `<div id="fb"></div>`;
+  return S.answers.comprehension === 2
+    ? `<div id="fb" class="feedback ok">That's right. A Shared pod goes straight to your destination. There are no detours and no stops on the way.</div>`
+    : `<div id="fb" class="feedback no">Not quite. A Shared pod goes straight to your destination with the people already on board. There are no detours and no stops on the way.</div>`;
+}
+const PAGEQ = {
+  eligibility: ["age18", "london"],
+  travel: ["borough", "familiarity", "usual_mode", "purpose", "group_size"],
+  household: ["income", "concession", "car_own", "licence", "car_avail"],
+  party: ["group3_share"],
+  comprehension: ["comprehension"],
+  about: ["age_band", "gender", "employment"],
+  pilot: ["pilot_clear", "pilot_realism", "pilot_comment"]
+};
+function visibleQs(screen) { return (PAGEQ[screen] || []).filter(id => !Q[id].showIf || Q[id].showIf(S.answers)); }
+
+const TRIP_SVG = `<svg width="46" height="12" viewBox="0 0 46 12" aria-hidden="true"><line x1="5" y1="6" x2="41" y2="6" stroke="#0B6E4F" stroke-width="3"/><circle cx="5" cy="6" r="4" fill="#fff" stroke="#18212B" stroke-width="2"/><circle cx="23" cy="6" r="3" fill="#fff" stroke="#18212B" stroke-width="2"/><circle cx="41" cy="6" r="4" fill="#fff" stroke="#18212B" stroke-width="2"/></svg>`;
+const CAR_SVG = `<svg class="ico" viewBox="0 0 84 58" role="img" aria-label="Car"><rect width="84" height="58" fill="#E8ECEF"/><path d="M14 38h56v-8l-8-3-7-9H29l-8 9-7 3z" fill="#5B6B7A"/><path d="M31 20h9v8H25zm13 0h9l6 8H44z" fill="#DDE6EE"/><circle cx="26" cy="39" r="6" fill="#18212B"/><circle cx="58" cy="39" r="6" fill="#18212B"/><circle cx="26" cy="39" r="2.5" fill="#C9D1D8"/><circle cx="58" cy="39" r="2.5" fill="#C9D1D8"/></svg>`;
+
+const SEATS = 4, STAND = 2;                          // a pod: 4 seats + room for 2 standing
+function seats(others) {                             // people on board = you + others
+  const people = others + 1;
+  let h = '<span class="seats" aria-hidden="true">';
+  for (let k = 0; k < SEATS; k++) h += `<i class="${k < people ? "full" : ""}"></i>`;
+  for (let k = 0; k < STAND; k++) h += `<i class="st${k === 0 ? " st1" : ""}${SEATS + k < people ? " full" : ""}"></i>`;
+  return h + "</span>";
+}
+const standing = others => Math.max(0, others + 1 - SEATS);
+const seatText = others => standing(others) ? `${SEATS} seated + ${standing(others)} standing` : "All seated";
+const NA = `<span class="na" aria-hidden="true">–</span>`;
+const others = n => n === 0 ? "None" : n === 1 ? "1 other" : n + " others";
+function headA() {
+  return `<div class="cmp-head" aria-hidden="true">
+    <div class="h-opt">Option</div><div class="h-key">Total time</div><div class="h-key">Price</div>
+    <div class="h-share">Sharing with</div><div class="h-group">Time (minutes)</div>
+    <div class="h-sub first">Walk</div><div class="h-sub">Wait</div><div class="h-sub">Travel</div></div>`;
+}
+function rowA(alt, name, pic, walk, wait, travel, price, share, label, opts = {}) {
+  const total = walk + wait + travel;
+  const disabled = !!opts.disabled;
+  const sel = S.choiceA[S._cur] === alt;
+  return `<button type="button" class="crow mode" role="radio" data-alt="${alt}" data-total="${total}" aria-checked="${sel}" ${disabled ? 'aria-disabled="true" tabindex="-1"' : ""}
+    aria-label="${label}. Total journey time ${total} minutes. Price ${money(price)}. Walking ${walk}, waiting ${wait}, travelling ${travel} minutes.${disabled ? " Not available to you." : ""}">
+    <div class="c c-radio"><span class="radio" aria-hidden="true"></span></div>
+    <div class="c c-opt"><span class="pic">${pic}</span><b>${name}</b>${disabled ? '<span class="off">Not available to you</span>' : ""}</div>
+    <div class="c c-key"><span class="num">${total}</span><span class="unit">min</span></div>
+    <div class="c c-key c-price"><span class="num">${money(price)}</span></div>
+    <div class="c c-share">${share}</div>
+    <div class="c c-sub first"><span class="num">${walk}</span></div>
+    <div class="c c-sub"><span class="num">${wait}</span></div>
+    <div class="c c-sub"><span class="num">${travel}</span></div>
+  </button>`;
+}
+function tableA(t) {
+  const pod = `<img src="img/pod_thumb.jpg" alt="" width="64" height="40">`;
+  const concept = t.concept === 1 ? "Named route" : "Ride matching";
+  const shareHTML = n => `${seats(n)}<span class="shr">${others(n)}</span><span class="seat-txt${standing(n) ? " standing" : ""}">${seatText(n)}</span>`;
+  const rows = [
+    rowA(1, "Personal pod", pod, t.pers_acc, t.pers_wait, t.pers_ivt, t.pers_fare,
+      `${seats(0)}<span class="shr">None</span><span class="seat-txt">All seated</span>`, "Personal Glydways pod, no other passengers, all seated"),
+    rowA(2, "Shared pod", pod, t.shar_acc, t.shar_wait, t.shar_ivt, t.shar_fare,
+      `${shareHTML(t.shar_occ)}<span class="tag">${concept}</span>`,
+      `Shared Glydways pod, ${others(t.shar_occ)}, ${seatText(t.shar_occ).toLowerCase()}, ${concept === "Named route" ? "Named Routes: get into a pod showing your destination" : "Ride Matching: the app tells you which pod"}`),
+    rowA(3, "Public transport", `<img src="img/bus_thumb.jpg" alt="" width="64" height="40">`, t.pt_acc, t.pt_wait, t.pt_ivt, t.pt_fare, NA, "Current public transport, " + CFG.pt_label),
+    rowA(4, "Taxi or app car", `<img src="img/taxi_thumb.jpg" alt="" width="64" height="40">`, t.taxi_acc, t.taxi_wait, t.taxi_ivt, t.taxi_fare, NA, "Taxi or ride-hailing, door to door"),
+    rowA(5, "Your car", CAR_SVG, t.car_acc, 0, t.car_ivt, t.car_cost, NA, "Car, drive and park", {disabled: !carOK()})
+  ].join("");
+  return `<div class="cmp cards" role="radiogroup" aria-label="Travel options">${headA()}${rows}</div>
+    <div class="legend">
+      <p>Sharing: ${seats(4)} a pod has 4 seats (squares) and room for 2 people standing (bars). Filled means someone is there, including you. With more than 4 people on board, some stand, and it could be you. – means it does not apply.</p>
+      <p><b>Named route:</b> get into a pod showing your destination. <b>Ride matching:</b> the app tells you which pod to get into.</p>
+      <p><b>Public transport:</b> ${CFG.pt_label.charAt(0).toLowerCase() + CFG.pt_label.slice(1)}, standard adult fare.</p>
+      <p><b>Taxi or app car:</b> black cab, or a car booked on an app such as Uber or Bolt, door to door.</p>
+      <p><b>Your car:</b> drive and park. The price is fuel and 2 hours' parking.</p>
+    </div>`;
+}
+function tableB(t) {
+  const occTxt = n => n === 0 ? "No other passengers" : n === 1 ? "1 other passenger" : n + " other passengers";
+  const row = (alt, name, leaves, extra, n, personal) => {
+    const sel = S.choiceB[S._cur] === alt;
+    return `<button type="button" class="crow mode" role="radio" data-alt="${alt}" aria-checked="${sel}"
+      aria-label="${name}. Leaves ${leaves}. Extra to pay ${extra}. ${personal ? "Just you or your group" : occTxt(n)}.">
+      <div class="c c-radio"><span class="radio" aria-hidden="true"></span></div>
+      <div class="c c-opt"><b>${name}</b></div>
+      <div class="c c-key"><span class="num">${leaves}</span></div>
+      <div class="c c-key"><span class="num">${extra}</span></div>
+      <div class="c c-share">${seats(personal ? 0 : n)}<span class="shr">${personal ? "Just your group" : others(n)}</span><span class="seat-txt">${seatText(personal ? 0 : n)}</span></div>
+    </button>`;
+  };
+  return `<div class="cmp b cards" role="radiogroup" aria-label="Station options">
+    <div class="cmp-head" aria-hidden="true"><div class="h-opt">What you do</div><div class="h-key">Leaves</div><div class="h-key">Extra to pay</div><div class="h-share">Sharing with</div></div>
+    ${row(1, "Board the Shared pod now", "Now", "£0", t.now_occ, false)}
+    ${row(2, "Wait for the next Shared pod", "In " + t.next_wait + " min", "£0", t.next_occ, false)}
+    ${row(3, "Pay more for a Personal pod", "Now", "+" + money(t.upgrade_extra), 0, true)}
+  </div>
+  <div class="legend"><p>Sharing: ${seats(1)} a pod has 4 seats (squares) and room for 2 standing (bars). Filled means someone is there, including you.</p></div>`;
+}
+
+function screenHTML(s) {
+  const nA = S.orderA.length, nB = S.orderB.length;
+  if (s === "consent") return `
+    <h1>Travel choices survey</h1>
+    <p class="lead">We are MBA students at Imperial College Business School. We are working on a student project with Glydways, a company that makes driverless transport pods.</p>
+    <p>We want to know how people in London would choose between different ways of making one trip.</p>
+    <div class="panel"><h2 style="margin-top:0">What you need to know</h2><ul class="plain">
+      <li>The survey takes about 8 to 10 minutes.</li>
+      <li>We do not ask for your name, email or contact details.</li>
+      <li>Your answers are stored in a secure Google Sheet that only the project team can see.</li>
+      <li>We will use the answers for our MBA project. We may share combined results with Glydways and Imperial College.</li>
+      <li>Taking part is your choice. You can stop at any time by closing this page.</li></ul></div>
+    <div class="q" id="q_consent"><fieldset><legend>Are you happy to take part?</legend>
+      <div role="radiogroup"><button type="button" class="opt" role="radio" data-q="consent" data-v="1" aria-checked="${S.answers.consent === 1}">Yes, I agree to take part</button></div></fieldset>
+      <p class="err">Please confirm to continue.</p></div>`;
+  if (s === "screenout") return `<h1>Thank you</h1><p class="lead">This survey is for adults who live or work in London, so we will not ask you any more questions.</p><p>You can close this page.</p>`;
+  if (s === "eligibility") return `<h1>About you</h1>` + PAGEQ.eligibility.map(qHTML).join("");
+  if (s === "travel") return `<h1>How you travel</h1>` + PAGEQ.travel.map(qHTML).join("");
+  if (s === "household") return `<h1>Your household</h1><p class="muted">These answers help us compare groups. We never ask for exact figures.</p>` + PAGEQ.household.map(qHTML).join("");
+  if (s === "explain") return `
+    <h1>What is a Glydways pod?</h1>
+    <figure class="hero"><img src="img/pod_scene.jpg" alt="Small driverless pods travelling on their own raised route between city buildings" width="904" height="508">
+      <figcaption>Artist's impression of Glydways pods on their own route. This is not a picture of Sutton.</figcaption></figure>
+    <p class="lead">Glydways pods are small, driverless electric vehicles. They run on their own dedicated route, away from other traffic. Each pod has 4 seats and room for 2 people standing, so it takes up to 6 passengers.</p>
+    <p>You walk to a Glydways station and book a pod on an app or at the station. Personal and Shared pods leave from the same station and take the same route, so the walk and the ride take the same time. There are two types.</p>
+    <div class="pods">
+      <div class="pod"><img src="img/pod_personal.jpg" alt="A Glydways pod with one passenger inside" width="720" height="492" loading="lazy">
+        <div><h3>Personal pod</h3><p>Just you, or you and the people you are travelling with. Nobody else gets in.</p></div></div>
+      <div class="pod"><img src="img/pod_shared.jpg" alt="A Glydways pod with four passengers inside" width="720" height="492" loading="lazy">
+        <div><h3>Shared pod</h3><p>You share with 1 to 5 other passengers. It goes straight to your destination. There are no detours and no stops on the way. If there are more than 4 people on board, some will stand.</p></div></div>
+    </div>
+    <h2>Two ways to share</h2>
+    <p>Both of these are shared rides. You will be sharing the pod with other passengers going to the same place.</p>
+    <div class="concepts">
+      <div><b>Ride Matching</b>The app puts you in a pod with people going to the same place. It tells you which pod to get into.</div>
+      <div><b>Named Routes</b>Pods at the station show their destination. You get into one that shows yours, together with the other passengers going there.</div>
+    </div>
+    <p class="note">This service is imaginary. We want to know what you would choose if it existed.</p>`;
+  if (s === "comprehension") return `<h1>A quick check</h1><p class="muted">This helps us know the explanation was clear.</p>` + qHTML("comprehension");
+  if (s === "journey") return `
+    <h1>Your trip</h1>
+    <p class="lead">Imagine you need to travel from <b>Sutton town centre</b> to <b>South Wimbledon station</b> on a weekday morning. You leave at about 8am and stay for about 2 hours.</p>
+    <figure class="routemap" id="map"><a href="${CFG.static_map}" target="_blank" rel="noopener">
+      <img src="${CFG.static_map}" width="720" height="1151" alt="Map of an imaginary Glydways route from Sutton town centre, past St Helier Hospital and Morden, to South Wimbledon. It runs just east of the Northern line between Morden and South Wimbledon."></a>
+      <figcaption>Tap the map to see it larger.</figcaption></figure>
+    <p class="small muted">The green line is an imaginary Glydways route. It runs from Sutton, past St Helier Hospital, to South Wimbledon.</p>
+    <div class="panel"><h2 style="margin-top:0">What to do</h2><ul class="plain">
+      <li>You will see ${nA} screens. Each one shows a table with five ways to make this trip, one per row.</li>
+      <li>Compare the rows and tap the one you would most likely use. Then press Next.</li>
+      <li>The times and prices change each time. There are no right or wrong answers.</li>
+      <li>Prices are for one adult making this one trip.</li>
+      ${carOK() ? "" : "<li>You told us you cannot use a car, so the car option will be greyed out.</li>"}</ul></div>`;
+  if (s.startsWith("A:")) {
+    const i = +s.slice(2); const t = taskA(i);
+    if (!carOK() && S.choiceA[s] === 5) delete S.choiceA[s];
+    return `<div class="trip">${TRIP_SVG}<span>Sutton to South Wimbledon, weekday 8am</span><span class="count">${i + 1} of ${nA}</span></div>
+      <h1 class="task-q">Which would you choose for this trip?</h1>
+      <p class="task-help">Compare the rows and tap your choice.</p>
+      ${tableA(t)}`;
+  }
+  if (s === "bintro") return `<h1>At the Glydways station</h1>
+    <p class="lead">Now imagine you have booked a <b>Shared pod</b> for ${money(CFG.booked_fare)}. You arrive at the station.</p>
+    <p>You will see ${nB} short situations. In each one, choose what you would do.</p>
+    <p class="muted">Other passengers shown for the next pod are what you would get. Nobody else can join it.</p>`;
+  if (s.startsWith("B:")) {
+    const i = +s.slice(2); const t = taskB(i);
+    return `<p class="small muted count">Station question ${i + 1} of ${nB}</p>
+      <div class="context">You booked a Shared pod for ${money(t.booked_fare)}. A Shared pod is ready at the platform.</div>
+      <h1 class="task-q">What would you do?</h1>
+      <p class="task-help">Tap the row you would choose.</p>
+      ${tableB(t)}`;
+  }
+  if (s === "about") return `<h1>A little more about you</h1><p class="muted">Three last questions about you. After this we explain the pods and start the choices.</p>` + PAGEQ.about.map(qHTML).join("");
+  if (s === "party") return `<h1>Travelling as a group</h1>
+    <p class="lead">Imagine you are making the same trip with <b>2 friends or family members</b>. There are 3 of you.</p>
+    <div class="panel"><p style="margin-top:0">Your group can book:</p><ul class="plain">
+      <li><b>a Personal pod</b> for just the 3 of you, at <b>£5 each</b>, or</li>
+      <li><b>a Shared pod</b>, where <b>1 other passenger</b> going to the same place joins you. Everyone gets a seat.</li></ul>
+      <p style="margin-bottom:0">Both pods leave at the same time and take the same time to get there.</p></div>` + PAGEQ.party.map(qHTML).join("");
+  if (s === "pilot") return `<h1>Help us improve the survey</h1><p class="muted">These questions only appear in the test version.</p>` + PAGEQ.pilot.map(qHTML).join("");
+  if (s === "submit") return submitHTML();
+  if (s === "done") return `<h1>Thank you</h1><p class="lead">Your answers have been received.</p>
+    <p>Your reference number is:</p><p class="ref">${S.ref}</p>
+    <p class="small muted">Keep this number if you might ask us to remove your answers. Contact: ${CFG.contact}</p>
+    <p>You can now close this page.</p>
+    <div class="again"><p style="margin:0"><b>Someone else would like to take part on this device?</b></p>
+      <button class="btn btn-back" id="restartBtn" type="button">Start a new response</button></div>`;
+  return "";
+}
+function submitHTML() {
+  const st = S._sendState || "ready";
+  let body = `<h1>Send your answers</h1><p class="lead">You have answered all the questions. Press the button to send your answers.</p>`;
+  if (st === "sending") body += `<div class="panel sending" role="status"><span class="spin"></span>Sending your answers…</div>`;
+  if (st === "error") body += `<div class="alert" role="alert"><b>Your answers were not sent.</b> They are still saved on this device. Check your internet connection, then press Try again.${S._sendError ? `<br><span class="small">${S._sendError}</span>` : ""}</div>`;
+  return body;
+}
+
+/* ------------------------------------------------------------ rendering */
+let enteredAt = Date.now();
+function cur() { return S.screenout ? "screenout" : S.submitted ? "done" : SCREENS[S.screen]; }
+function render(scrollTop = true) {
+  const s = cur(); S._cur = s;
+  $("#main").classList.toggle("tight", s.startsWith("A:") || s.startsWith("B:"));
+  $("#main").innerHTML = screenHTML(s);
+  bind(s);
+  const pos = S.submitted || S.screenout ? SCREENS.length : S.screen;
+  const pct = Math.round(100 * pos / SCREENS.length);
+  $("#barFill").style.width = pct + "%"; $("#bar").setAttribute("aria-valuenow", pct);
+  $("#stepText").textContent = (S.submitted || S.screenout) ? "Finished" : `Step ${S.screen + 1} of ${SCREENS.length}`;
+  $("#backBtn").classList.toggle("hidden", S.screen === 0 || s === "done" || s === "screenout" || S._sendState === "sending");
+  $("#foot").classList.toggle("hidden", s === "done" || s === "screenout");
+  updateNext();
+  if (scrollTop) { window.scrollTo({top: 0, behavior: "auto"}); $("#main").focus({preventScroll: true}); }
+  if (s === "journey") drawMap();
+  enteredAt = Date.now();
+}
+function screenComplete(s) {
+  if (s === "consent") return S.answers.consent === 1;
+  if (PAGEQ[s]) return visibleQs(s).every(id => Q[id].optional || (S.answers[id] !== undefined && S.answers[id] !== ""));
+  if (s.startsWith("A:")) return !!S.choiceA[s];
+  if (s.startsWith("B:")) return !!S.choiceB[s];
+  return true;
+}
+function updateNext() {
+  const s = cur(); const b = $("#nextBtn");
+  if (s === "submit") {
+    const st = S._sendState || "ready";
+    b.textContent = st === "error" ? "Try again" : st === "sending" ? "Sending…" : "Submit my answers";
+    b.disabled = st === "sending";
+    return;
+  }
+  b.textContent = s === "consent" ? "Start" : "Next";
+  const needsChoice = s.startsWith("A:") || s.startsWith("B:");
+  b.disabled = needsChoice && !screenComplete(s);
+}
+function nextTarget(fromEl) {
+  const qs = $$(".q", $("#main"));
+  const i = qs.indexOf(fromEl);
+  for (let k = i + 1; k < qs.length; k++) {
+    const id = qs[k].id.slice(2);
+    if (S.answers[id] === undefined || S.answers[id] === "") return qs[k];
+  }
+  return null;
+}
+function scrollToEl(el, block = "start") {
+  if (!el) return;
+  const y = el.getBoundingClientRect().top + window.scrollY - 70;
+  if (block === "start") window.scrollTo({top: Math.max(0, y), behavior: smooth});
+  else el.scrollIntoView({behavior: smooth, block});
+}
+function afterAnswer(qEl) {
+  save(); qEl.classList.remove("has-error");
+  const s = cur();
+  const t = nextTarget(qEl);
+  if (t) setTimeout(() => scrollToEl(t), 180);
+  else setTimeout(() => { window.scrollTo({top: document.body.scrollHeight, behavior: smooth}); pulse(); }, 180);
+  updateNext();
+}
+function pulse() { const b = $("#nextBtn"); b.classList.remove("pulse"); void b.offsetWidth; b.classList.add("pulse"); }
+
+function restart() {
+  const prev = S.ref;
+  try { localStorage.removeItem(KEY); } catch (e) {}
+  S = newState(); S.previous_ref = prev || ""; save(); buildScreens(); render(true);
+}
+function bind(s) {
+  const rb = $("#restartBtn");
+  if (rb) rb.addEventListener("click", () => ask("Start a new response?",
+    "The survey will start again from the beginning on this device. The answers already sent are kept.",
+    "Start again", "Cancel", restart));
+  $$(".opt[data-q]").forEach(btn => btn.addEventListener("click", () => {
+    const id = btn.dataset.q; const v = +btn.dataset.v;
+    if (id === "comprehension") {
+      if (!S.answers.comprehension_seen) S.answers.comprehension = v;   // record the first answer only
+      S.answers.comprehension_seen = 1; S.answers.comprehension_last = v;
+      $$(`.opt[data-q="${id}"]`).forEach(o => o.setAttribute("aria-checked", String(+o.dataset.v === v)));
+      $("#fb").outerHTML = feedbackHTML(); save(); updateNext(); pulse(); return;
+    }
+    S.answers[id] = v;
+    if (id === "licence") {                                               // car question depends on licence
+      if (v !== 1) delete S.answers.car_avail;
+      render(false); const el = v === 1 ? $("#q_car_avail") : null; if (el) setTimeout(() => scrollToEl(el), 150); else pulse();
+      save(); return;
+    }
+    $$(`.opt[data-q="${id}"]`).forEach(o => o.setAttribute("aria-checked", String(+o.dataset.v === v)));
+    afterAnswer(btn.closest(".q"));
+  }));
+  $$("select[data-q]").forEach(sel => sel.addEventListener("change", () => {
+    S.answers[sel.dataset.q] = sel.value ? +sel.value : ""; afterAnswer(sel.closest(".q"));
+  }));
+  $$("textarea[data-q]").forEach(tx => tx.addEventListener("input", () => { S.answers[tx.dataset.q] = tx.value.slice(0, 600); save(); }));
+  $$(".mode[data-alt]").forEach(card => card.addEventListener("click", () => {
+    if (card.getAttribute("aria-disabled") === "true") return;
+    const alt = +card.dataset.alt;
+    if (s.startsWith("A:")) S.choiceA[s] = alt; else S.choiceB[s] = alt;
+    $$(".mode[data-alt]").forEach(c => c.setAttribute("aria-checked", String(c === card)));
+    save(); updateNext(); pulse();
+    const r = card.getBoundingClientRect();
+    if (r.bottom > window.innerHeight - 90) window.scrollBy({top: r.bottom - (window.innerHeight - 96), behavior: smooth});
+    setTimeout(() => $("#nextBtn").focus({preventScroll: true}), 50);
+  }));
+  $$(".cards[role=radiogroup]").forEach(g => g.addEventListener("keydown", e => {
+    if (!["ArrowDown", "ArrowUp"].includes(e.key)) return;
+    const cards = $$(".mode:not([aria-disabled=true])", g); const i = cards.indexOf(document.activeElement);
+    const n = cards[(i + (e.key === "ArrowDown" ? 1 : cards.length - 1)) % cards.length]; if (n) { e.preventDefault(); n.focus(); }
+  }));
+}
+
+function recordTime(s) { S.rt[s] = (S.rt[s] || 0) + (Date.now() - enteredAt); }
+function go(delta) {
+  const s = cur();
+  recordTime(s);
+  S.screen = Math.min(Math.max(0, S.screen + delta), SCREENS.length - 1);
+  save(); render(true);
+}
+/* ------------------------------------------------------------ pop-up */
+let modalYes = null, modalFrom = null;
+function ask(title, text, yes, no, onYes) {
+  $("#mTitle").textContent = title; $("#mText").textContent = text; $("#mYes").textContent = yes; $("#mNo").textContent = no;
+  modalYes = onYes; modalFrom = document.activeElement; $("#modal").hidden = false; $("#mYes").focus();
+}
+function closeModal() { $("#modal").hidden = true; modalYes = null; if (modalFrom && modalFrom.focus) modalFrom.focus({preventScroll: true}); }
+$("#mYes").addEventListener("click", () => { const f = modalYes; closeModal(); if (f) f(); });
+$("#mNo").addEventListener("click", closeModal);
+$("#modal").addEventListener("click", e => { if (e.target === $("#modal")) closeModal(); });
+document.addEventListener("keydown", e => { if (e.key === "Escape" && !$("#modal").hidden) closeModal(); });
+
+$("#nextBtn").addEventListener("click", () => {
+  const s = cur();
+  if (s === "submit") {
+    if ((S._sendState || "ready") === "error" || inflight) return submit();       // Try again: no second question
+    return ask("Send your answers?", "Please check you are happy with your answers. You cannot change them after sending.",
+      "Yes, send my answers", "Go back and check", submit);
+  }
+  if (!screenComplete(s)) {
+    const missing = (s === "consent" ? [$("#q_consent")] : visibleQs(s).filter(id => !Q[id].optional && (S.answers[id] === undefined || S.answers[id] === "")).map(id => $("#q_" + id)));
+    missing.forEach(el => el && el.classList.add("has-error"));
+    if (missing[0]) scrollToEl(missing[0]);
+    return;
+  }
+  if (s === "eligibility" && (S.answers.age18 === 2 || S.answers.london === 4)) { recordTime(s); S.screenout = true; save(); return render(true); }
+  if (s === "consent" && !S.block) {
+    $("#nextBtn").disabled = true; $("#nextBtn").textContent = "Loading…";
+    return assignBlock(() => go(1));
+  }
+  go(1);
+});
+$("#backBtn").addEventListener("click", () => go(-1));
+
+/* ------------------------------------------------------------ map */
+// Static route map (img/route_map.png, drawn by make_route_map.py). No map servers are used:
+// OpenStreetMap blocks survey sites under its tile policy and CARTO now needs an API key.
+function drawMap() {
+  const img = $("#map img"); if (!img) return;
+  const fallback = () => { const el = $("#map"); if (!el || !el.isConnected) return; el.outerHTML = `<div id="map" class="map-fallback">${schematicSVG()}</div>`; };
+  if (img.complete && !img.naturalWidth) fallback(); else img.addEventListener("error", fallback, {once: true});
+}
+function schematicSVG() {
+  return `<svg viewBox="0 0 320 300" role="img" aria-label="Diagram of the imaginary route from Sutton, past St Helier Hospital and Morden, to South Wimbledon">
+    <rect width="320" height="300" fill="#F4F6F7"/>
+    <path d="M150 262 C150 222 170 200 176 168 C182 136 148 116 150 80 C151 60 156 48 156 36" fill="none" stroke="#0B6E4F" stroke-width="7" stroke-linecap="round"/>
+    <g font-family="Atkinson Hyperlegible, system-ui, sans-serif" font-size="14" fill="#18212B" font-weight="700">
+      <circle cx="156" cy="36" r="9" fill="#fff" stroke="#18212B" stroke-width="3"/><text x="172" y="41">South Wimbledon</text>
+      <circle cx="176" cy="168" r="9" fill="#fff" stroke="#18212B" stroke-width="3"/><text x="192" y="173">St Helier Hospital</text>
+      <circle cx="150" cy="262" r="9" fill="#fff" stroke="#18212B" stroke-width="3"/><text x="166" y="267">Sutton town centre</text>
+      <circle cx="153" cy="104" r="4" fill="#18212B"/><text x="164" y="108" font-weight="400" fill="#56606B" font-size="12">passes Morden</text></g>
+    <g transform="translate(28,40)" fill="#56606B" font-size="12" font-family="system-ui"><path d="M8 0 L14 16 L8 12 L2 16 Z" fill="#56606B"/><text x="3" y="30">N</text></g>
+    <text x="16" y="290" font-size="11" fill="#56606B" font-family="system-ui">Diagram, not to scale. About 7 km.</text></svg>`;
+}
+
+/* ------------------------------------------------------------ submission */
+function payload() {
+  const a = {};
+  Object.keys(Q).forEach(k => { if (S.answers[k] !== undefined) a[k] = S.answers[k]; });
+  const start = new Date(S.started_at).getTime();
+  return {
+    respondent_id: S.rid, survey_mode: CFG.mode, survey_version: CFG.version, design_version: CFG.design_version,
+    is_test: S.is_test, block: S.block, block_source: S.block_source, consent: S.answers.consent === 1 ? 1 : 0,
+    started_at: S.started_at, submitted_at: new Date().toISOString(), duration_sec: Math.round((Date.now() - start) / 1000),
+    gameB_enabled: S.orderB.length > 0, answers: a,
+    gameA: S.orderA.map((id, i) => ({task_id: id, choice: S.choiceA["A:" + i] || null, rt_ms: S.rt["A:" + i] || null})),
+    gameB: S.orderB.map((id, i) => ({b_task_id: id, choice: S.choiceB["B:" + i] || null, rt_ms: S.rt["B:" + i] || null})),
+    user_agent: navigator.userAgent, screen_w: window.innerWidth, previous_ref: S.previous_ref || ""
+  };
+}
+function clientCheck(p) {
+  const bad = [];
+  if (p.gameA.some(r => !r.choice)) bad.push("some travel choices are missing");
+  if (p.gameB.some(r => !r.choice)) bad.push("some station questions are missing");
+  ["age18", "london", "income", "licence", "comprehension"].forEach(k => { if (p.answers[k] === undefined) bad.push("a required answer is missing"); });
+  return [...new Set(bad)];
+}
+let inflight = false;
+function submit() {
+  if (inflight || S.submitted) return;
+  const p = S.out && S.out.respondent_id === S.rid ? Object.assign(S.out, {submitted_at: new Date().toISOString()}) : payload();
+  const bad = clientCheck(p);
+  if (bad.length) { S._sendState = "error"; S._sendError = "Please go back: " + bad.join(", ") + "."; render(false); return; }
+  S.out = p; save();
+  inflight = true; S._sendState = "sending"; S._sendError = ""; render(false);
+  const finish = (ok, ref, msg) => {
+    inflight = false;
+    if (ok) { S.submitted = true; S.ref = ref; S._sendState = "done"; save(); render(true); }
+    else { S._sendState = "error"; S._sendError = msg || ""; save(); render(false); }
+  };
+  
+  if (!CFG.endpoint) return finish(false, "", "The survey is not connected to a server yet.");
+  const ctl = new AbortController(); const timer = setTimeout(() => ctl.abort(), 30000);
+  fetch(CFG.endpoint, {method: "POST", body: JSON.stringify(p), signal: ctl.signal})   // text/plain: no CORS preflight
+    .then(r => r.json())
+    .then(j => { clearTimeout(timer); j && j.ok ? finish(true, j.ref) : finish(false, "", (j && j.errors || []).join("; ")); })
+    .catch(() => { clearTimeout(timer); finish(false, ""); });
+}
+
+
+
+window.addEventListener("pageshow", () => { if (S.orderA.length) buildScreens(); render(true); });
+</script>
+</body>
+</html>
