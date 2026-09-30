@@ -751,7 +751,12 @@ function submit() {
   const ctl = new AbortController(); const timer = setTimeout(() => ctl.abort(), 30000);
   fetch(CFG.endpoint, {method: "POST", body: JSON.stringify(p), signal: ctl.signal})   // text/plain: no CORS preflight
     .then(r => r.json())
-    .then(j => { clearTimeout(timer); j && j.ok ? finish(true, j.ref) : finish(false, "", (j && j.errors || []).join("; ")); })
+    .then(j => {
+      clearTimeout(timer);
+      if (j && j.ok && j.ref) return finish(true, j.ref);                     // saved: the collector always returns a reference
+      if (j && j.ok && j.service) return finish(false, "", "The survey server answered as if this was a page visit, so nothing was saved (web app access must be set to Anyone).");
+      finish(false, "", (j && j.errors || []).join("; "));
+    })
     .catch(() => { clearTimeout(timer); finish(false, ""); });
 }
 
