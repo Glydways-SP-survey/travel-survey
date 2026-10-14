@@ -69,6 +69,13 @@ textarea{min-height:90px;resize:vertical}
 .pod p{margin:0;font-size:.95rem}
 @media (min-width:520px){.pods{grid-template-columns:1fr 1fr}}
 .concepts{display:grid;gap:10px;margin:10px 0}
+.steps{list-style:none;padding:0;margin:8px 0 12px;display:grid;gap:8px}
+.steps li{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px 12px}
+.steps svg{flex:0 0 44px}
+@media (min-width:520px){.steps{grid-template-columns:repeat(3,1fr)}.steps li{flex-direction:column;text-align:center;gap:6px}}
+.minimap{margin:8px auto 14px;max-width:220px;text-align:center}
+.minimap img{display:block;width:100%;height:auto;border-radius:var(--r-sm);border:1px solid var(--line)}
+.minimap figcaption{font-size:.8rem;color:var(--muted);margin-top:6px}
 .concepts div{background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 14px}
 .concepts b{display:block}
 .hero{margin:6px 0 14px}
@@ -93,7 +100,7 @@ textarea{min-height:90px;resize:vertical}
 .task-help{font-size:.86rem;color:var(--muted);margin:0 0 8px}
 .wrap.tight{padding-left:8px;padding-right:8px}
 .wrap.tight .trip,.wrap.tight .task-q,.wrap.tight .task-help,.wrap.tight .count,.wrap.tight .context{margin-left:8px;margin-right:8px}
-.cmp{--cols:28px 68px minmax(40px,.9fr) minmax(54px,1.2fr) 68px 30px 30px 34px;
+.cmp{--cols:28px 68px 64px minmax(54px,1.2fr) minmax(40px,.9fr) 30px 30px 38px;
   background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden}
 .cmp.b{--cols:30px minmax(0,1.6fr) minmax(0,1.1fr) minmax(0,.95fr) minmax(0,1.1fr)}
 .cmp.b .c-key .num{font-size:.98rem}
@@ -103,9 +110,10 @@ textarea{min-height:90px;resize:vertical}
 .cmp-head .h-opt{grid-row:1/3;grid-column:1/3;justify-content:flex-start;padding-left:10px}
 .cmp-head .h-key{grid-row:1/3;color:var(--ink);font-size:.76rem;background:#E7EFEA}
 .cmp-head .h-share{grid-row:1/3;border-left:1px solid var(--line)}
-.cmp-head .h-group{grid-column:6/9;border-left:1px solid var(--line);border-bottom:1px solid var(--line);padding-bottom:4px;font-weight:400}
+.cmp-head .h-group{grid-column:5/9;border-left:1px solid var(--line);border-bottom:1px solid var(--line);padding-bottom:4px;font-weight:400}
 .cmp-head .h-sub{font-weight:400;padding-top:4px}
 .cmp-head .h-sub{border-left:1px solid var(--line)}
+.cmp-head .h-sub.total{color:var(--ink);font-weight:700;background:#E7EFEA;border-left:2px solid var(--ink)}
 .crow{width:100%;margin:0;padding:0;border:0;border-top:1px solid var(--line);background:var(--card);font:inherit;color:inherit;
   cursor:pointer;text-align:center;position:relative;min-height:58px}
 .crow:first-of-type{border-top:0}
@@ -114,6 +122,7 @@ textarea{min-height:90px;resize:vertical}
 .crow .c-share{border-left:1px solid var(--line)}
 .crow .c-sub{border-left:1px solid var(--line)}          /* lines between walk, wait and travel */
 .crow .c-sub.first{border-left-color:#AEB6BD}
+.crow .c-total{border-left:2px solid var(--ink)}        /* total time sits with, and before, its breakdown */
 .crow .c-opt{align-items:flex-start;text-align:left;padding-left:2px;gap:4px}
 .crow>.c-radio{padding:0 0 0 6px;align-items:center}
 .crow .c-opt .pic{position:relative;width:54px;height:33px;border-radius:6px;overflow:hidden;background:#EEF1F3;flex:0 0 auto}
@@ -145,10 +154,11 @@ textarea{min-height:90px;resize:vertical}
 .crow .seat-txt.standing{color:#8A4B00;font-weight:700}
 .legend{font-size:.78rem;color:var(--muted);margin:10px 8px 0;line-height:1.45}
 .legend p{margin:0 0 4px;max-width:none}
+.legend p.sure{color:var(--ink);font-size:.86rem;font-weight:700;margin-bottom:6px}
 .context{background:#fff;border:1px solid var(--line);border-left:4px solid var(--ink);border-radius:var(--r-sm);padding:10px 14px;margin:6px 0 12px}
 .count{margin:0}
 @media (max-width:370px){
-  .cmp{--cols:26px 64px minmax(38px,.9fr) minmax(50px,1.2fr) 62px 27px 27px 32px}
+  .cmp{--cols:26px 64px 58px minmax(50px,1.2fr) minmax(38px,.9fr) 27px 27px 36px}
   .crow .tag{font-size:.6rem}
   .crow>.c{padding-top:5px;padding-bottom:5px}
   .crow .c-opt .pic{width:48px;height:29px}
@@ -159,7 +169,7 @@ textarea{min-height:90px;resize:vertical}
   .crow .num{font-size:.95rem} .crow .c-key .num{font-size:1rem} .crow .c-sub .num{font-size:.9rem}
 }
 @media (min-width:540px){
-  .cmp{--cols:40px 110px 1fr 1fr 96px 1fr 1fr 1fr}
+  .cmp{--cols:40px 110px 96px 1fr 1fr 1fr 1fr 1fr}
   .crow .c-opt .pic{width:88px;height:54px}
   .crow .c-opt b{font-size:.84rem}
   .cmp-head{font-size:.78rem}
@@ -220,9 +230,11 @@ textarea{min-height:90px;resize:vertical}
 
 <script>
 "use strict";
-const CFG = {"mode":"final","variant":"intl","countries":["Argentina","Australia","Austria","Bahrain","Bangladesh","Belgium","Brazil","Canada","China","Denmark","Egypt","France","Germany","Greece","Hong Kong","India","Indonesia","Iraq","Ireland","Italy","Japan","Jordan","Kenya","Kuwait","Lebanon","Malaysia","Mexico","Morocco","Netherlands","New Zealand","Nigeria","Norway","Oman","Pakistan","Philippines","Poland","Portugal","Qatar","Saudi Arabia","Singapore","South Africa","South Korea","Spain","Sweden","Switzerland","Taiwan","Thailand","Turkey","United Arab Emirates","United Kingdom","United States","Vietnam"],"version":"1.3.2","design_version":"8c229067c8","endpoint":"https://script.google.com/macros/s/AKfycbzraPW66nSdsiUvHwqApKjusOZjt1RvwZH4OJsd_1YJL7vd5EGZ8mEmxgb-6YbJMD--/exec","contact":"hussein.falih25@imperial.ac.uk","gameB_enabled":true,"pilot_questions":false,"booked_fare":2.5,"pt_label":"Bus to Morden, then Underground (1 change)","route":[[51.3594,-0.1914,"Sutton","right"],[51.3627,-0.1937],[51.369,-0.1929],[51.3752,-0.19],[51.379,-0.185],[51.3799,-0.182,"St Helier Hospital","right"],[51.3848,-0.1858],[51.3925,-0.1903],[51.4,-0.194],[51.4022,-0.1948],[51.409,-0.1927],[51.4153,-0.192,"South Wimbledon","right"]],"static_map":"img/route_map.png","design":{"gameA":[{"task_id":1,"block":1,"is_holdout":0,"pers_acc":9,"pers_wait":3,"pers_ivt":10,"pers_fare":4.0,"shar_acc":9,"shar_wait":3,"shar_ivt":10,"shar_fare":2.0,"shar_occ":1,"concept":0,"pt_acc":6,"pt_wait":11,"pt_ivt":21,"taxi_acc":0,"taxi_wait":3,"taxi_ivt":17,"taxi_fare":17.5,"car_acc":2,"car_ivt":21,"car_cost":6.5,"pt_fare":4.05},{"task_id":2,"block":1,"is_holdout":0,"pers_acc":3,"pers_wait":5,"pers_ivt":12,"pers_fare":6.0,"shar_acc":3,"shar_wait":8,"shar_ivt":12,"shar_fare":3.0,"shar_occ":4,"concept":0,"pt_acc":10,"pt_wait":5,"pt_ivt":30,"taxi_acc":0,"taxi_wait":3,"taxi_ivt":14,"taxi_fare":17.5,"car_acc":8,"car_ivt":14,"car_cost":6.5,"pt_fare":4.05},{"task_id":3,"block":1,"is_holdout":0,"pers_acc":9,"pers_wait":5,"pers_ivt":14,"pers_fare":6.0,"shar_acc":9,"shar_wait":8,"shar_ivt":14,"shar_fare":2.5,"shar_occ":3,"concept":0,"pt_acc":6,"pt_wait":5,"pt_ivt":21,"taxi_acc":0,"taxi_wait":3,"taxi_ivt":14,"taxi_fare":17.5,"car_acc":5,"car_ivt":17,"car_cost":10.0,"pt_fare":4.05},{"task_id":4,"block":1,"is_holdout":0,"pers_acc":6,"pers_wait":1,"pers_ivt":14,"pers_fare":4.0,"shar_acc":6,"shar_wait":8,"shar_ivt":14,"shar_fare":1.5,"shar_occ":4,"concept":0,"pt_acc":6,"pt_wait":11,"pt_ivt":21,"taxi_acc":0,"taxi_wait":11,"taxi_ivt":17,"taxi_fare":27.5,"car_acc":2,"car_ivt":14,"car_cost":10.0,"pt_fare":4.05},{"task_id":5,"block":1,"is_holdout":0,"pers_acc":6,"pers_wait":5,"pers_ivt":10,"pers_fare":4.0,"shar_acc":6,"shar_wait":5,"shar_ivt":10,"shar_fare":3.0,"shar_occ":4,"concept":0,"pt_acc":6,"pt_wait":7,"pt_ivt":30,"taxi_acc":2,"taxi_wait":7,"taxi_ivt":21,"taxi_fare":22.0,"car_acc":8,"car_ivt":17,"car_cost":6.5,"pt_fare":4.05},{"task_id":6,"block":1,"is_holdout":0,"pers_acc":9,"pers_wait":5,"pers_ivt":12,"pers_fare":6.0,"shar_acc":9,"shar_wait":5,"shar_ivt":12,"shar_fare":3.0,"shar_occ":3,"concept":0,"pt_acc":6,"pt_wait":5,"pt_ivt":25,"taxi_acc":2,"taxi_wait":11,"taxi_ivt":17,"taxi_fare":17.5,"car_acc":8,"car_ivt":21,"car_cost":8.0,"pt_fare":4.05},{"task_id":7,"block":1,"is_holdout":0,"pers_acc":6,"pers_wait":3,"pers_ivt":12,"pers_fare":3.0,"shar_acc":6,"shar_wait":3,"shar_ivt":12,"shar_fare":2.0,"shar_occ":2,"concept":0,"pt_acc":10,"pt_wait":5,"pt_ivt":25,"taxi_acc":2,"taxi_wait":3,"taxi_ivt":14,"taxi_fare":17.5,"car_acc":5,"car_ivt":14,"car_cost":10.0,"pt_fare":4.05},{"task_id":8,"block":1,"is_holdout":0,"pers_acc":3,"pers_wait":1,"pers_ivt":10,"pers_fare":4.0,"shar_acc":3,"shar_wait":8,"shar_ivt":10,"shar_fare":3.0,"shar_occ":1,"concept":0,"pt_acc":10,"pt_wait":5,"pt_ivt":21,"taxi_acc":0,"taxi_wait":7,"taxi_ivt":14,"taxi_fare":27.5,"car_acc":2,"car_ivt":17,"car_cost":8.0,"pt_fare":4.05},{"task_id":9,"block":1,"is_holdout":0,"pers_acc":9,"pers_wait":3,"pers_ivt":14,"pers_fare":5.0,"shar_acc":9,"shar_wait":3,"shar_ivt":14,"shar_fare":1.5,"shar_occ":1,"concept":0,"pt_acc":6,"pt_wait":7,"pt_ivt":25,"taxi_acc":2,"taxi_wait":7,"taxi_ivt":17,"taxi_fare":27.5,"car_acc":8,"car_ivt":21,"car_cost":8.0,"pt_fare":4.05},{"task_id":10,"block":1,"is_holdout":0,"pers_acc":3,"pers_wait":3,"pers_ivt":14,"pers_fare":6.0,"shar_acc":3,"shar_wait":3,"shar_ivt":14,"shar_fare":1.5,"shar_occ":4,"concept":0,"pt_acc":10,"pt_wait":11,"pt_ivt":30,"taxi_acc":2,"taxi_wait":11,"taxi_ivt":21,"taxi_fare":22.0,"car_acc":2,"car_ivt":21,"car_cost":6.5,"pt_fare":4.05},{"task_id":11,"block":2,"is_holdout":0,"pers_acc":3,"pers_wait":1,"pers_ivt":10,"pers_fare":6.0,"shar_acc":3,"shar_wait":8,"shar_ivt":10,"shar_fare":1.5,"shar_occ":1,"concept":0,"pt_acc":10,"pt_wait":7,"pt_ivt":30,"taxi_acc":0,"taxi_wait":7,"taxi_ivt":14,"taxi_fare":22.0,"car_acc":8,"car_ivt":14,"car_cost":8.0,"pt_fare":4.05},{"task_id":12,"block":2,"is_holdout":0,"pers_acc":9,"pers_wait":3,"pers_ivt":14,"pers_fare":3.0,"shar_acc":9,"shar_wait":3,"shar_ivt":14,"shar_fare":2.5,"shar_occ":3,"concept":0,"pt_acc":6,"pt_wait":7,"pt_ivt":21,"taxi_acc":0,"taxi_wait":7,"taxi_ivt":21,"taxi_fare":22.0,"car_acc":2,"car_ivt":21,"car_cost":8.0,"pt_fare":4.05},{"task_id":13,"block":2,"is_holdout":0,"pers_acc":6,"pers_wait":5,"pers_ivt":10,"pers_fare":5.0,"shar_acc":6,"shar_wait":5,"shar_ivt":10,"shar_fare":1.5,"shar_occ":3,"concept":0,"pt_acc":6,"pt_wait":11,"pt_ivt":30,"taxi_acc":0,"taxi_wait":7,"taxi_ivt":17,"taxi_fare":22.0,"car_acc":8,"car_ivt":21,"car_cost":8.0,"pt_fare":4.05},{"task_id":14,"block":2,"is_holdout":0,"pers_acc":9,"pers_wait":1,"pers_ivt":14,"pers_fare":5.0,"shar_acc":9,"shar_wait":8,"shar_ivt":14,"shar_fare":2.5,"shar_occ":1,"concept":0,"pt_acc":10,"pt_wait":7,"pt_ivt":30,"taxi_acc":0,"taxi_wait":7,"taxi_ivt":14,"taxi_fare":27.5,"car_acc":2,"car_ivt":14,"car_cost":6.5,"pt_fare":4.05},{"task_id":15,"block":2,"is_holdout":0,"pers_acc":3,"pers_wait":3,"pers_ivt":12,"pers_fare":6.0,"shar_acc":3,"shar_wait":3,"shar_ivt":12,"shar_fare":2.0,"shar_occ":4,"concept":0,"pt_acc":10,"pt_wait":11,"pt_ivt":21,"taxi_acc":2,"taxi_wait":3,"taxi_ivt":17,"taxi_fare":17.5,"car_acc":5,"car_ivt":21,"car_cost":8.0,"pt_fare":4.05},{"task_id":16,"block":2,"is_holdout":0,"pers_acc":6,"pers_wait":1,"pers_ivt":12,"pers_fare":5.0,"shar_acc":6,"shar_wait":8,"shar_ivt":12,"shar_fare":3.0,"shar_occ":2,"concept":0,"pt_acc":6,"pt_wait":11,"pt_ivt":21,"taxi_acc":2,"taxi_wait":7,"taxi_ivt":21,"taxi_fare":27.5,"car_acc":5,"car_ivt":21,"car_cost":6.5,"pt_fare":4.05},{"task_id":17,"block":2,"is_holdout":0,"pers_acc":9,"pers_wait":5,"pers_ivt":14,"pers_fare":4.0,"shar_acc":9,"shar_wait":5,"shar_ivt":14,"shar_fare":3.0,"shar_occ":4,"concept":0,"pt_acc":10,"pt_wait":7,"pt_ivt":21,"taxi_acc":0,"taxi_wait":3,"taxi_ivt":17,"taxi_fare":17.5,"car_acc":8,"car_ivt":14,"car_cost":10.0,"pt_fare":4.05},{"task_id":18,"block":2,"is_holdout":0,"pers_acc":3,"pers_wait":5,"pers_ivt":14,"pers_fare":6.0,"shar_acc":3,"shar_wait":5,"shar_ivt":14,"shar_fare":1.5,"shar_occ":3,"concept":0,"pt_acc":6,"pt_wait":7,"pt_ivt":25,"taxi_acc":0,"taxi_wait":11,"taxi_ivt":14,"taxi_fare":27.5,"car_acc":5,"car_ivt":14,"car_cost":6.5,"pt_fare":4.05},{"task_id":19,"block":2,"is_holdout":0,"pers_acc":6,"pers_wait":1,"pers_ivt":10,"pers_fare":3.0,"shar_acc":6,"shar_wait":8,"shar_ivt":10,"shar_fare":2.5,"shar_occ":2,"concept":0,"pt_acc":10,"pt_wait":7,"pt_ivt":25,"taxi_acc":2,"taxi_wait":3,"taxi_ivt":21,"taxi_fare":22.0,"car_acc":5,"car_ivt":21,"car_cost":10.0,"pt_fare":4.05},{"task_id":20,"block":2,"is_holdout":0,"pers_acc":9,"pers_wait":5,"pers_ivt":12,"pers_fare":5.0,"shar_acc":9,"shar_wait":5,"shar_ivt":12,"shar_fare":2.0,"shar_occ":2,"concept":0,"pt_acc":6,"pt_wait":5,"pt_ivt":25,"taxi_acc":2,"taxi_wait":7,"taxi_ivt":14,"taxi_fare":17.5,"car_acc":5,"car_ivt":14,"car_cost":8.0,"pt_fare":4.05},{"task_id":21,"block":3,"is_holdout":0,"pers_acc":6,"pers_wait":1,"pers_ivt":12,"pers_fare":6.0,"shar_acc":6,"shar_wait":8,"shar_ivt":12,"shar_fare":2.0,"shar_occ":4,"concept":0,"pt_acc":6,"pt_wait":11,"pt_ivt":30,"taxi_acc":0,"taxi_wait":3,"taxi_ivt":17,"taxi_fare":17.5,"car_acc":8,"car_ivt":14,"car_cost":10.0,"pt_fare":4.05},{"task_id":22,"block":3,"is_holdout":0,"pers_acc":9,"pers_wait":3,"pers_ivt":10,"pers_fare":3.0,"shar_acc":9,"shar_wait":3,"shar_ivt":10,"shar_fare":2.5,"shar_occ":4,"concept":0,"pt_acc":6,"pt_wait":5,"pt_ivt":30,"taxi_acc":2,"taxi_wait":7,"taxi_ivt":17,"taxi_fare":17.5,"car_acc":2,"car_ivt":21,"car_cost":6.5,"pt_fare":4.05},{"task_id":23,"block":3,"is_holdout":0,"pers_acc":9,"pers_wait":5,"pers_ivt":10,"pers_fare":4.0,"shar_acc":9,"shar_wait":5,"shar_ivt":10,"shar_fare":3.0,"shar_occ":3,"concept":0,"pt_acc":6,"pt_wait":5,"pt_ivt":30,"taxi_acc":0,"taxi_wait":11,"taxi_ivt":14,"taxi_fare":22.0,"car_acc":5,"car_ivt":14,"car_cost":10.0,"pt_fare":4.05},{"task_id":24,"block":3,"is_holdout":0,"pers_acc":6,"pers_wait":5,"pers_ivt":12,"pers_fare":5.0,"shar_acc":6,"shar_wait":8,"shar_ivt":12,"shar_fare":3.0,"shar_occ":2,"concept":0,"pt_acc":6,"pt_wait":5,"pt_ivt":21,"taxi_acc":0,"taxi_wait":11,"taxi_ivt":21,"taxi_fare":17.5,"car_acc":5,"car_ivt":21,"car_cost":10.0,"pt_fare":4.05},{"task_id":25,"block":3,"is_holdout":0,"pers_acc":3,"pers_wait":5,"pers_ivt":12,"pers_fare":6.0,"shar_acc":3,"shar_wait":5,"shar_ivt":12,"shar_fare":2.5,"shar_occ":3,"concept":0,"pt_acc":10,"pt_wait":5,"pt_ivt":21,"taxi_acc":2,"taxi_wait":7,"taxi_ivt":14,"taxi_fare":22.0,"car_acc":8,"car_ivt":17,"car_cost":6.5,"pt_fare":4.05},{"task_id":26,"block":3,"is_holdout":0,"pers_acc":9,"pers_wait":1,"pers_ivt":14,"pers_fare":5.0,"shar_acc":9,"shar_wait":8,"shar_ivt":14,"shar_fare":1.5,"shar_occ":2,"concept":0,"pt_acc":10,"pt_wait":5,"pt_ivt":25,"taxi_acc":2,"taxi_wait":3,"taxi_ivt":14,"taxi_fare":22.0,"car_acc":2,"car_ivt":17,"car_cost":10.0,"pt_fare":4.05},{"task_id":27,"block":3,"is_holdout":0,"pers_acc":3,"pers_wait":5,"pers_ivt":14,"pers_fare":5.0,"shar_acc":3,"shar_wait":5,"shar_ivt":14,"shar_fare":3.0,"shar_occ":1,"concept":0,"pt_acc":6,"pt_wait":11,"pt_ivt":25,"taxi_acc":2,"taxi_wait":7,"taxi_ivt":14,"taxi_fare":22.0,"car_acc":8,"car_ivt":14,"car_cost":6.5,"pt_fare":4.05},{"task_id":28,"block":3,"is_holdout":0,"pers_acc":3,"pers_wait":3,"pers_ivt":12,"pers_fare":3.0,"shar_acc":3,"shar_wait":3,"shar_ivt":12,"shar_fare":2.0,"shar_occ":1,"concept":0,"pt_acc":10,"pt_wait":11,"pt_ivt":21,"taxi_acc":2,"taxi_wait":3,"taxi_ivt":21,"taxi_fare":22.0,"car_acc":2,"car_ivt":17,"car_cost":10.0,"pt_fare":4.05},{"task_id":29,"block":3,"is_holdout":0,"pers_acc":6,"pers_wait":3,"pers_ivt":14,"pers_fare":5.0,"shar_acc":6,"shar_wait":3,"shar_ivt":14,"shar_fare":1.5,"shar_occ":4,"concept":0,"pt_acc":10,"pt_wait":11,"pt_ivt":25,"taxi_acc":0,"taxi_wait":11,"taxi_ivt":17,"taxi_fare":22.0,"car_acc":2,"car_ivt":14,"car_cost":6.5,"pt_fare":4.05},{"task_id":30,"block":3,"is_holdout":0,"pers_acc":9,"pers_wait":1,"pers_ivt":14,"pers_fare":5.0,"shar_acc":9,"shar_wait":8,"shar_ivt":14,"shar_fare":1.5,"shar_occ":3,"concept":0,"pt_acc":10,"pt_wait":5,"pt_ivt":30,"taxi_acc":0,"taxi_wait":3,"taxi_ivt":21,"taxi_fare":27.5,"car_acc":5,"car_ivt":17,"car_cost":8.0,"pt_fare":4.05},{"task_id":31,"block":4,"is_holdout":0,"pers_acc":9,"pers_wait":3,"pers_ivt":14,"pers_fare":4.0,"shar_acc":9,"shar_wait":3,"shar_ivt":14,"shar_fare":3.0,"shar_occ":1,"concept":0,"pt_acc":10,"pt_wait":11,"pt_ivt":21,"taxi_acc":2,"taxi_wait":11,"taxi_ivt":17,"taxi_fare":17.5,"car_acc":2,"car_ivt":14,"car_cost":6.5,"pt_fare":4.05},{"task_id":32,"block":4,"is_holdout":0,"pers_acc":3,"pers_wait":3,"pers_ivt":12,"pers_fare":4.0,"shar_acc":3,"shar_wait":3,"shar_ivt":12,"shar_fare":3.0,"shar_occ":4,"concept":0,"pt_acc":10,"pt_wait":7,"pt_ivt":21,"taxi_acc":2,"taxi_wait":3,"taxi_ivt":17,"taxi_fare":17.5,"car_acc":8,"car_ivt":21,"car_cost":8.0,"pt_fare":4.05},{"task_id":33,"block":4,"is_holdout":0,"pers_acc":9,"pers_wait":5,"pers_ivt":10,"pers_fare":6.0,"shar_acc":9,"shar_wait":8,"shar_ivt":10,"shar_fare":1.5,"shar_occ":4,"concept":0,"pt_acc":6,"pt_wait":5,"pt_ivt":30,"taxi_acc":0,"taxi_wait":3,"taxi_ivt":14,"taxi_fare":17.5,"car_acc":2,"car_ivt":14,"car_cost":10.0,"pt_fare":4.05},{"task_id":34,"block":4,"is_holdout":0,"pers_acc":9,"pers_wait":5,"pers_ivt":10,"pers_fare":3.0,"shar_acc":9,"shar_wait":5,"shar_ivt":10,"shar_fare":2.5,"shar_occ":2,"concept":0,"pt_acc":6,"pt_wait":5,"pt_ivt":30,"taxi_acc":0,"taxi_wait":3,"taxi_ivt":17,"taxi_fare":27.5,"car_acc":2,"car_ivt":21,"car_cost":6.5,"pt_fare":4.05},{"task_id":35,"block":4,"is_holdout":0,"pers_acc":6,"pers_wait":5,"pers_ivt":12,"pers_fare":3.0,"shar_acc":6,"shar_wait":5,"shar_ivt":12,"shar_fare":2.5,"shar_occ":4,"concept":0,"pt_acc":10,"pt_wait":5,"pt_ivt":21,"taxi_acc":0,"taxi_wait":3,"taxi_ivt":14,"taxi_fare":27.5,"car_acc":2,"car_ivt":17,"car_cost":10.0,"pt_fare":4.05},{"task_id":36,"block":4,"is_holdout":0,"pers_acc":9,"pers_wait":3,"pers_ivt":12,"pers_fare":6.0,"shar_acc":9,"shar_wait":3,"shar_ivt":12,"shar_fare":2.0,"shar_occ":1,"concept":0,"pt_acc":10,"pt_wait":7,"pt_ivt":30,"taxi_acc":0,"taxi_wait":3,"taxi_ivt":21,"taxi_fare":27.5,"car_acc":5,"car_ivt":17,"car_cost":6.5,"pt_fare":4.05},{"task_id":37,"block":4,"is_holdout":0,"pers_acc":6,"pers_wait":3,"pers_ivt":14,"pers_fare":5.0,"shar_acc":6,"shar_wait":3,"shar_ivt":14,"shar_fare":1.5,"shar_occ":3,"concept":0,"pt_acc":6,"pt_wait":11,"pt_ivt":25,"taxi_acc":0,"taxi_wait":11,"taxi_ivt":14,"taxi_fare":17.5,"car_acc":8,"car_ivt":17,"car_cost":8.0,"pt_fare":4.05},{"task_id":38,"block":4,"is_holdout":0,"pers_acc":3,"pers_wait":1,"pers_ivt":14,"pers_fare":3.0,"shar_acc":3,"shar_wait":8,"shar_ivt":14,"shar_fare":2.0,"shar_occ":1,"concept":0,"pt_acc":10,"pt_wait":7,"pt_ivt":25,"taxi_acc":2,"taxi_wait":11,"taxi_ivt":14,"taxi_fare":22.0,"car_acc":8,"car_ivt":14,"car_cost":10.0,"pt_fare":4.05},{"task_id":39,"block":4,"is_holdout":0,"pers_acc":3,"pers_wait":1,"pers_ivt":10,"pers_fare":5.0,"shar_acc":3,"shar_wait":8,"shar_ivt":10,"shar_fare":3.0,"shar_occ":3,"concept":0,"pt_acc":6,"pt_wait":11,"pt_ivt":30,"taxi_acc":2,"taxi_wait":11,"taxi_ivt":21,"taxi_fare":17.5,"car_acc":8,"car_ivt":21,"car_cost":6.5,"pt_fare":4.05},{"task_id":40,"block":4,"is_holdout":0,"pers_acc":3,"pers_wait":1,"pers_ivt":14,"pers_fare":6.0,"shar_acc":3,"shar_wait":8,"shar_ivt":14,"shar_fare":1.5,"shar_occ":2,"concept":0,"pt_acc":6,"pt_wait":5,"pt_ivt":30,"taxi_acc":0,"taxi_wait":7,"taxi_ivt":21,"taxi_fare":27.5,"car_acc":2,"car_ivt":17,"car_cost":6.5,"pt_fare":4.05},{"task_id":41,"block":1,"is_holdout":1,"pers_acc":6,"pers_wait":3,"pers_ivt":12,"pers_fare":4.0,"shar_acc":6,"shar_wait":5,"shar_ivt":12,"shar_fare":2.0,"shar_occ":2,"concept":0,"pt_acc":6,"pt_wait":7,"pt_ivt":25,"taxi_acc":2,"taxi_wait":7,"taxi_ivt":17,"taxi_fare":22.0,"car_acc":5,"car_ivt":17,"car_cost":8.0,"pt_fare":4.05},{"task_id":42,"block":2,"is_holdout":1,"pers_acc":6,"pers_wait":3,"pers_ivt":12,"pers_fare":5.0,"shar_acc":6,"shar_wait":5,"shar_ivt":12,"shar_fare":2.5,"shar_occ":1,"concept":0,"pt_acc":6,"pt_wait":7,"pt_ivt":25,"taxi_acc":2,"taxi_wait":7,"taxi_ivt":17,"taxi_fare":22.0,"car_acc":5,"car_ivt":17,"car_cost":8.0,"pt_fare":4.05},{"task_id":43,"block":3,"is_holdout":1,"pers_acc":6,"pers_wait":3,"pers_ivt":12,"pers_fare":3.0,"shar_acc":6,"shar_wait":5,"shar_ivt":12,"shar_fare":1.5,"shar_occ":4,"concept":0,"pt_acc":6,"pt_wait":7,"pt_ivt":25,"taxi_acc":2,"taxi_wait":7,"taxi_ivt":17,"taxi_fare":22.0,"car_acc":5,"car_ivt":17,"car_cost":8.0,"pt_fare":4.05},{"task_id":44,"block":4,"is_holdout":1,"pers_acc":6,"pers_wait":3,"pers_ivt":12,"pers_fare":6.0,"shar_acc":6,"shar_wait":5,"shar_ivt":12,"shar_fare":3.0,"shar_occ":3,"concept":0,"pt_acc":6,"pt_wait":7,"pt_ivt":25,"taxi_acc":2,"taxi_wait":7,"taxi_ivt":17,"taxi_fare":22.0,"car_acc":5,"car_ivt":17,"car_cost":8.0,"pt_fare":4.05}],"gameB":[{"b_task_id":1,"block":1,"now_occ":3,"next_occ":1,"next_wait":9,"upgrade_extra":1.0,"booked_fare":2.5},{"b_task_id":2,"block":1,"now_occ":3,"next_occ":0,"next_wait":6,"upgrade_extra":3.0,"booked_fare":2.5},{"b_task_id":3,"block":1,"now_occ":1,"next_occ":0,"next_wait":3,"upgrade_extra":3.0,"booked_fare":2.5},{"b_task_id":4,"block":1,"now_occ":2,"next_occ":1,"next_wait":9,"upgrade_extra":1.0,"booked_fare":2.5},{"b_task_id":5,"block":2,"now_occ":2,"next_occ":1,"next_wait":3,"upgrade_extra":3.0,"booked_fare":2.5},{"b_task_id":6,"block":2,"now_occ":1,"next_occ":0,"next_wait":9,"upgrade_extra":1.0,"booked_fare":2.5},{"b_task_id":7,"block":2,"now_occ":3,"next_occ":1,"next_wait":9,"upgrade_extra":3.0,"booked_fare":2.5},{"b_task_id":8,"block":2,"now_occ":3,"next_occ":0,"next_wait":3,"upgrade_extra":1.0,"booked_fare":2.5},{"b_task_id":9,"block":3,"now_occ":3,"next_occ":0,"next_wait":9,"upgrade_extra":3.0,"booked_fare":2.5},{"b_task_id":10,"block":3,"now_occ":1,"next_occ":0,"next_wait":9,"upgrade_extra":3.0,"booked_fare":2.5},{"b_task_id":11,"block":3,"now_occ":3,"next_occ":1,"next_wait":3,"upgrade_extra":1.0,"booked_fare":2.5},{"b_task_id":12,"block":3,"now_occ":2,"next_occ":1,"next_wait":3,"upgrade_extra":1.0,"booked_fare":2.5},{"b_task_id":13,"block":4,"now_occ":3,"next_occ":0,"next_wait":3,"upgrade_extra":3.0,"booked_fare":2.5},{"b_task_id":14,"block":4,"now_occ":3,"next_occ":0,"next_wait":9,"upgrade_extra":1.0,"booked_fare":2.5},{"b_task_id":15,"block":4,"now_occ":1,"next_occ":0,"next_wait":3,"upgrade_extra":1.0,"booked_fare":2.5},{"b_task_id":16,"block":4,"now_occ":2,"next_occ":1,"next_wait":9,"upgrade_extra":3.0,"booked_fare":2.5}]}};
+const CFG = {"mode":"final","variant":"intl","countries":["Argentina","Australia","Austria","Bahrain","Bangladesh","Belgium","Brazil","Canada","China","Denmark","Egypt","France","Germany","Greece","Hong Kong","India","Indonesia","Iraq","Ireland","Italy","Japan","Jordan","Kenya","Kuwait","Lebanon","Malaysia","Mexico","Morocco","Netherlands","New Zealand","Nigeria","Norway","Oman","Pakistan","Philippines","Poland","Portugal","Qatar","Saudi Arabia","Singapore","South Africa","South Korea","Spain","Sweden","Switzerland","Taiwan","Thailand","Turkey","United Arab Emirates","United Kingdom","United States","Vietnam"],"version":"1.4.0","design_version":"8c229067c8","endpoint":"https://script.google.com/macros/s/AKfycbzraPW66nSdsiUvHwqApKjusOZjt1RvwZH4OJsd_1YJL7vd5EGZ8mEmxgb-6YbJMD--/exec","contact":"hussein.falih25@imperial.ac.uk","gameB_enabled":true,"pilot_questions":false,"booked_fare":2.5,"pt_label":"Bus to Morden, then Underground (1 change)","route":[[51.3594,-0.1914,"Sutton","right"],[51.3627,-0.1937],[51.369,-0.1929],[51.3752,-0.19],[51.379,-0.185],[51.3799,-0.182,"St Helier Hospital","right"],[51.3848,-0.1858],[51.3925,-0.1903],[51.4,-0.194],[51.4022,-0.1948],[51.409,-0.1927],[51.4153,-0.192,"South Wimbledon","right"]],"static_map":"img/route_map.png","design":{"gameA":[{"task_id":1,"block":1,"is_holdout":0,"pers_acc":9,"pers_wait":3,"pers_ivt":10,"pers_fare":4.0,"shar_acc":9,"shar_wait":3,"shar_ivt":10,"shar_fare":2.0,"shar_occ":1,"concept":0,"pt_acc":6,"pt_wait":11,"pt_ivt":21,"taxi_acc":0,"taxi_wait":3,"taxi_ivt":17,"taxi_fare":17.5,"car_acc":2,"car_ivt":21,"car_cost":6.5,"pt_fare":4.05},{"task_id":2,"block":1,"is_holdout":0,"pers_acc":3,"pers_wait":5,"pers_ivt":12,"pers_fare":6.0,"shar_acc":3,"shar_wait":8,"shar_ivt":12,"shar_fare":3.0,"shar_occ":4,"concept":0,"pt_acc":10,"pt_wait":5,"pt_ivt":30,"taxi_acc":0,"taxi_wait":3,"taxi_ivt":14,"taxi_fare":17.5,"car_acc":8,"car_ivt":14,"car_cost":6.5,"pt_fare":4.05},{"task_id":3,"block":1,"is_holdout":0,"pers_acc":9,"pers_wait":5,"pers_ivt":14,"pers_fare":6.0,"shar_acc":9,"shar_wait":8,"shar_ivt":14,"shar_fare":2.5,"shar_occ":3,"concept":0,"pt_acc":6,"pt_wait":5,"pt_ivt":21,"taxi_acc":0,"taxi_wait":3,"taxi_ivt":14,"taxi_fare":17.5,"car_acc":5,"car_ivt":17,"car_cost":10.0,"pt_fare":4.05},{"task_id":4,"block":1,"is_holdout":0,"pers_acc":6,"pers_wait":1,"pers_ivt":14,"pers_fare":4.0,"shar_acc":6,"shar_wait":8,"shar_ivt":14,"shar_fare":1.5,"shar_occ":4,"concept":0,"pt_acc":6,"pt_wait":11,"pt_ivt":21,"taxi_acc":0,"taxi_wait":11,"taxi_ivt":17,"taxi_fare":27.5,"car_acc":2,"car_ivt":14,"car_cost":10.0,"pt_fare":4.05},{"task_id":5,"block":1,"is_holdout":0,"pers_acc":6,"pers_wait":5,"pers_ivt":10,"pers_fare":4.0,"shar_acc":6,"shar_wait":5,"shar_ivt":10,"shar_fare":3.0,"shar_occ":4,"concept":0,"pt_acc":6,"pt_wait":7,"pt_ivt":30,"taxi_acc":2,"taxi_wait":7,"taxi_ivt":21,"taxi_fare":22.0,"car_acc":8,"car_ivt":17,"car_cost":6.5,"pt_fare":4.05},{"task_id":6,"block":1,"is_holdout":0,"pers_acc":9,"pers_wait":5,"pers_ivt":12,"pers_fare":6.0,"shar_acc":9,"shar_wait":5,"shar_ivt":12,"shar_fare":3.0,"shar_occ":3,"concept":0,"pt_acc":6,"pt_wait":5,"pt_ivt":25,"taxi_acc":2,"taxi_wait":11,"taxi_ivt":17,"taxi_fare":17.5,"car_acc":8,"car_ivt":21,"car_cost":8.0,"pt_fare":4.05},{"task_id":7,"block":1,"is_holdout":0,"pers_acc":6,"pers_wait":3,"pers_ivt":12,"pers_fare":3.0,"shar_acc":6,"shar_wait":3,"shar_ivt":12,"shar_fare":2.0,"shar_occ":2,"concept":0,"pt_acc":10,"pt_wait":5,"pt_ivt":25,"taxi_acc":2,"taxi_wait":3,"taxi_ivt":14,"taxi_fare":17.5,"car_acc":5,"car_ivt":14,"car_cost":10.0,"pt_fare":4.05},{"task_id":8,"block":1,"is_holdout":0,"pers_acc":3,"pers_wait":1,"pers_ivt":10,"pers_fare":4.0,"shar_acc":3,"shar_wait":8,"shar_ivt":10,"shar_fare":3.0,"shar_occ":1,"concept":0,"pt_acc":10,"pt_wait":5,"pt_ivt":21,"taxi_acc":0,"taxi_wait":7,"taxi_ivt":14,"taxi_fare":27.5,"car_acc":2,"car_ivt":17,"car_cost":8.0,"pt_fare":4.05},{"task_id":9,"block":1,"is_holdout":0,"pers_acc":9,"pers_wait":3,"pers_ivt":14,"pers_fare":5.0,"shar_acc":9,"shar_wait":3,"shar_ivt":14,"shar_fare":1.5,"shar_occ":1,"concept":0,"pt_acc":6,"pt_wait":7,"pt_ivt":25,"taxi_acc":2,"taxi_wait":7,"taxi_ivt":17,"taxi_fare":27.5,"car_acc":8,"car_ivt":21,"car_cost":8.0,"pt_fare":4.05},{"task_id":10,"block":1,"is_holdout":0,"pers_acc":3,"pers_wait":3,"pers_ivt":14,"pers_fare":6.0,"shar_acc":3,"shar_wait":3,"shar_ivt":14,"shar_fare":1.5,"shar_occ":4,"concept":0,"pt_acc":10,"pt_wait":11,"pt_ivt":30,"taxi_acc":2,"taxi_wait":11,"taxi_ivt":21,"taxi_fare":22.0,"car_acc":2,"car_ivt":21,"car_cost":6.5,"pt_fare":4.05},{"task_id":11,"block":2,"is_holdout":0,"pers_acc":3,"pers_wait":1,"pers_ivt":10,"pers_fare":6.0,"shar_acc":3,"shar_wait":8,"shar_ivt":10,"shar_fare":1.5,"shar_occ":1,"concept":0,"pt_acc":10,"pt_wait":7,"pt_ivt":30,"taxi_acc":0,"taxi_wait":7,"taxi_ivt":14,"taxi_fare":22.0,"car_acc":8,"car_ivt":14,"car_cost":8.0,"pt_fare":4.05},{"task_id":12,"block":2,"is_holdout":0,"pers_acc":9,"pers_wait":3,"pers_ivt":14,"pers_fare":3.0,"shar_acc":9,"shar_wait":3,"shar_ivt":14,"shar_fare":2.5,"shar_occ":3,"concept":0,"pt_acc":6,"pt_wait":7,"pt_ivt":21,"taxi_acc":0,"taxi_wait":7,"taxi_ivt":21,"taxi_fare":22.0,"car_acc":2,"car_ivt":21,"car_cost":8.0,"pt_fare":4.05},{"task_id":13,"block":2,"is_holdout":0,"pers_acc":6,"pers_wait":5,"pers_ivt":10,"pers_fare":5.0,"shar_acc":6,"shar_wait":5,"shar_ivt":10,"shar_fare":1.5,"shar_occ":3,"concept":0,"pt_acc":6,"pt_wait":11,"pt_ivt":30,"taxi_acc":0,"taxi_wait":7,"taxi_ivt":17,"taxi_fare":22.0,"car_acc":8,"car_ivt":21,"car_cost":8.0,"pt_fare":4.05},{"task_id":14,"block":2,"is_holdout":0,"pers_acc":9,"pers_wait":1,"pers_ivt":14,"pers_fare":5.0,"shar_acc":9,"shar_wait":8,"shar_ivt":14,"shar_fare":2.5,"shar_occ":1,"concept":0,"pt_acc":10,"pt_wait":7,"pt_ivt":30,"taxi_acc":0,"taxi_wait":7,"taxi_ivt":14,"taxi_fare":27.5,"car_acc":2,"car_ivt":14,"car_cost":6.5,"pt_fare":4.05},{"task_id":15,"block":2,"is_holdout":0,"pers_acc":3,"pers_wait":3,"pers_ivt":12,"pers_fare":6.0,"shar_acc":3,"shar_wait":3,"shar_ivt":12,"shar_fare":2.0,"shar_occ":4,"concept":0,"pt_acc":10,"pt_wait":11,"pt_ivt":21,"taxi_acc":2,"taxi_wait":3,"taxi_ivt":17,"taxi_fare":17.5,"car_acc":5,"car_ivt":21,"car_cost":8.0,"pt_fare":4.05},{"task_id":16,"block":2,"is_holdout":0,"pers_acc":6,"pers_wait":1,"pers_ivt":12,"pers_fare":5.0,"shar_acc":6,"shar_wait":8,"shar_ivt":12,"shar_fare":3.0,"shar_occ":2,"concept":0,"pt_acc":6,"pt_wait":11,"pt_ivt":21,"taxi_acc":2,"taxi_wait":7,"taxi_ivt":21,"taxi_fare":27.5,"car_acc":5,"car_ivt":21,"car_cost":6.5,"pt_fare":4.05},{"task_id":17,"block":2,"is_holdout":0,"pers_acc":9,"pers_wait":5,"pers_ivt":14,"pers_fare":4.0,"shar_acc":9,"shar_wait":5,"shar_ivt":14,"shar_fare":3.0,"shar_occ":4,"concept":0,"pt_acc":10,"pt_wait":7,"pt_ivt":21,"taxi_acc":0,"taxi_wait":3,"taxi_ivt":17,"taxi_fare":17.5,"car_acc":8,"car_ivt":14,"car_cost":10.0,"pt_fare":4.05},{"task_id":18,"block":2,"is_holdout":0,"pers_acc":3,"pers_wait":5,"pers_ivt":14,"pers_fare":6.0,"shar_acc":3,"shar_wait":5,"shar_ivt":14,"shar_fare":1.5,"shar_occ":3,"concept":0,"pt_acc":6,"pt_wait":7,"pt_ivt":25,"taxi_acc":0,"taxi_wait":11,"taxi_ivt":14,"taxi_fare":27.5,"car_acc":5,"car_ivt":14,"car_cost":6.5,"pt_fare":4.05},{"task_id":19,"block":2,"is_holdout":0,"pers_acc":6,"pers_wait":1,"pers_ivt":10,"pers_fare":3.0,"shar_acc":6,"shar_wait":8,"shar_ivt":10,"shar_fare":2.5,"shar_occ":2,"concept":0,"pt_acc":10,"pt_wait":7,"pt_ivt":25,"taxi_acc":2,"taxi_wait":3,"taxi_ivt":21,"taxi_fare":22.0,"car_acc":5,"car_ivt":21,"car_cost":10.0,"pt_fare":4.05},{"task_id":20,"block":2,"is_holdout":0,"pers_acc":9,"pers_wait":5,"pers_ivt":12,"pers_fare":5.0,"shar_acc":9,"shar_wait":5,"shar_ivt":12,"shar_fare":2.0,"shar_occ":2,"concept":0,"pt_acc":6,"pt_wait":5,"pt_ivt":25,"taxi_acc":2,"taxi_wait":7,"taxi_ivt":14,"taxi_fare":17.5,"car_acc":5,"car_ivt":14,"car_cost":8.0,"pt_fare":4.05},{"task_id":21,"block":3,"is_holdout":0,"pers_acc":6,"pers_wait":1,"pers_ivt":12,"pers_fare":6.0,"shar_acc":6,"shar_wait":8,"shar_ivt":12,"shar_fare":2.0,"shar_occ":4,"concept":0,"pt_acc":6,"pt_wait":11,"pt_ivt":30,"taxi_acc":0,"taxi_wait":3,"taxi_ivt":17,"taxi_fare":17.5,"car_acc":8,"car_ivt":14,"car_cost":10.0,"pt_fare":4.05},{"task_id":22,"block":3,"is_holdout":0,"pers_acc":9,"pers_wait":3,"pers_ivt":10,"pers_fare":3.0,"shar_acc":9,"shar_wait":3,"shar_ivt":10,"shar_fare":2.5,"shar_occ":4,"concept":0,"pt_acc":6,"pt_wait":5,"pt_ivt":30,"taxi_acc":2,"taxi_wait":7,"taxi_ivt":17,"taxi_fare":17.5,"car_acc":2,"car_ivt":21,"car_cost":6.5,"pt_fare":4.05},{"task_id":23,"block":3,"is_holdout":0,"pers_acc":9,"pers_wait":5,"pers_ivt":10,"pers_fare":4.0,"shar_acc":9,"shar_wait":5,"shar_ivt":10,"shar_fare":3.0,"shar_occ":3,"concept":0,"pt_acc":6,"pt_wait":5,"pt_ivt":30,"taxi_acc":0,"taxi_wait":11,"taxi_ivt":14,"taxi_fare":22.0,"car_acc":5,"car_ivt":14,"car_cost":10.0,"pt_fare":4.05},{"task_id":24,"block":3,"is_holdout":0,"pers_acc":6,"pers_wait":5,"pers_ivt":12,"pers_fare":5.0,"shar_acc":6,"shar_wait":8,"shar_ivt":12,"shar_fare":3.0,"shar_occ":2,"concept":0,"pt_acc":6,"pt_wait":5,"pt_ivt":21,"taxi_acc":0,"taxi_wait":11,"taxi_ivt":21,"taxi_fare":17.5,"car_acc":5,"car_ivt":21,"car_cost":10.0,"pt_fare":4.05},{"task_id":25,"block":3,"is_holdout":0,"pers_acc":3,"pers_wait":5,"pers_ivt":12,"pers_fare":6.0,"shar_acc":3,"shar_wait":5,"shar_ivt":12,"shar_fare":2.5,"shar_occ":3,"concept":0,"pt_acc":10,"pt_wait":5,"pt_ivt":21,"taxi_acc":2,"taxi_wait":7,"taxi_ivt":14,"taxi_fare":22.0,"car_acc":8,"car_ivt":17,"car_cost":6.5,"pt_fare":4.05},{"task_id":26,"block":3,"is_holdout":0,"pers_acc":9,"pers_wait":1,"pers_ivt":14,"pers_fare":5.0,"shar_acc":9,"shar_wait":8,"shar_ivt":14,"shar_fare":1.5,"shar_occ":2,"concept":0,"pt_acc":10,"pt_wait":5,"pt_ivt":25,"taxi_acc":2,"taxi_wait":3,"taxi_ivt":14,"taxi_fare":22.0,"car_acc":2,"car_ivt":17,"car_cost":10.0,"pt_fare":4.05},{"task_id":27,"block":3,"is_holdout":0,"pers_acc":3,"pers_wait":5,"pers_ivt":14,"pers_fare":5.0,"shar_acc":3,"shar_wait":5,"shar_ivt":14,"shar_fare":3.0,"shar_occ":1,"concept":0,"pt_acc":6,"pt_wait":11,"pt_ivt":25,"taxi_acc":2,"taxi_wait":7,"taxi_ivt":14,"taxi_fare":22.0,"car_acc":8,"car_ivt":14,"car_cost":6.5,"pt_fare":4.05},{"task_id":28,"block":3,"is_holdout":0,"pers_acc":3,"pers_wait":3,"pers_ivt":12,"pers_fare":3.0,"shar_acc":3,"shar_wait":3,"shar_ivt":12,"shar_fare":2.0,"shar_occ":1,"concept":0,"pt_acc":10,"pt_wait":11,"pt_ivt":21,"taxi_acc":2,"taxi_wait":3,"taxi_ivt":21,"taxi_fare":22.0,"car_acc":2,"car_ivt":17,"car_cost":10.0,"pt_fare":4.05},{"task_id":29,"block":3,"is_holdout":0,"pers_acc":6,"pers_wait":3,"pers_ivt":14,"pers_fare":5.0,"shar_acc":6,"shar_wait":3,"shar_ivt":14,"shar_fare":1.5,"shar_occ":4,"concept":0,"pt_acc":10,"pt_wait":11,"pt_ivt":25,"taxi_acc":0,"taxi_wait":11,"taxi_ivt":17,"taxi_fare":22.0,"car_acc":2,"car_ivt":14,"car_cost":6.5,"pt_fare":4.05},{"task_id":30,"block":3,"is_holdout":0,"pers_acc":9,"pers_wait":1,"pers_ivt":14,"pers_fare":5.0,"shar_acc":9,"shar_wait":8,"shar_ivt":14,"shar_fare":1.5,"shar_occ":3,"concept":0,"pt_acc":10,"pt_wait":5,"pt_ivt":30,"taxi_acc":0,"taxi_wait":3,"taxi_ivt":21,"taxi_fare":27.5,"car_acc":5,"car_ivt":17,"car_cost":8.0,"pt_fare":4.05},{"task_id":31,"block":4,"is_holdout":0,"pers_acc":9,"pers_wait":3,"pers_ivt":14,"pers_fare":4.0,"shar_acc":9,"shar_wait":3,"shar_ivt":14,"shar_fare":3.0,"shar_occ":1,"concept":0,"pt_acc":10,"pt_wait":11,"pt_ivt":21,"taxi_acc":2,"taxi_wait":11,"taxi_ivt":17,"taxi_fare":17.5,"car_acc":2,"car_ivt":14,"car_cost":6.5,"pt_fare":4.05},{"task_id":32,"block":4,"is_holdout":0,"pers_acc":3,"pers_wait":3,"pers_ivt":12,"pers_fare":4.0,"shar_acc":3,"shar_wait":3,"shar_ivt":12,"shar_fare":3.0,"shar_occ":4,"concept":0,"pt_acc":10,"pt_wait":7,"pt_ivt":21,"taxi_acc":2,"taxi_wait":3,"taxi_ivt":17,"taxi_fare":17.5,"car_acc":8,"car_ivt":21,"car_cost":8.0,"pt_fare":4.05},{"task_id":33,"block":4,"is_holdout":0,"pers_acc":9,"pers_wait":5,"pers_ivt":10,"pers_fare":6.0,"shar_acc":9,"shar_wait":8,"shar_ivt":10,"shar_fare":1.5,"shar_occ":4,"concept":0,"pt_acc":6,"pt_wait":5,"pt_ivt":30,"taxi_acc":0,"taxi_wait":3,"taxi_ivt":14,"taxi_fare":17.5,"car_acc":2,"car_ivt":14,"car_cost":10.0,"pt_fare":4.05},{"task_id":34,"block":4,"is_holdout":0,"pers_acc":9,"pers_wait":5,"pers_ivt":10,"pers_fare":3.0,"shar_acc":9,"shar_wait":5,"shar_ivt":10,"shar_fare":2.5,"shar_occ":2,"concept":0,"pt_acc":6,"pt_wait":5,"pt_ivt":30,"taxi_acc":0,"taxi_wait":3,"taxi_ivt":17,"taxi_fare":27.5,"car_acc":2,"car_ivt":21,"car_cost":6.5,"pt_fare":4.05},{"task_id":35,"block":4,"is_holdout":0,"pers_acc":6,"pers_wait":5,"pers_ivt":12,"pers_fare":3.0,"shar_acc":6,"shar_wait":5,"shar_ivt":12,"shar_fare":2.5,"shar_occ":4,"concept":0,"pt_acc":10,"pt_wait":5,"pt_ivt":21,"taxi_acc":0,"taxi_wait":3,"taxi_ivt":14,"taxi_fare":27.5,"car_acc":2,"car_ivt":17,"car_cost":10.0,"pt_fare":4.05},{"task_id":36,"block":4,"is_holdout":0,"pers_acc":9,"pers_wait":3,"pers_ivt":12,"pers_fare":6.0,"shar_acc":9,"shar_wait":3,"shar_ivt":12,"shar_fare":2.0,"shar_occ":1,"concept":0,"pt_acc":10,"pt_wait":7,"pt_ivt":30,"taxi_acc":0,"taxi_wait":3,"taxi_ivt":21,"taxi_fare":27.5,"car_acc":5,"car_ivt":17,"car_cost":6.5,"pt_fare":4.05},{"task_id":37,"block":4,"is_holdout":0,"pers_acc":6,"pers_wait":3,"pers_ivt":14,"pers_fare":5.0,"shar_acc":6,"shar_wait":3,"shar_ivt":14,"shar_fare":1.5,"shar_occ":3,"concept":0,"pt_acc":6,"pt_wait":11,"pt_ivt":25,"taxi_acc":0,"taxi_wait":11,"taxi_ivt":14,"taxi_fare":17.5,"car_acc":8,"car_ivt":17,"car_cost":8.0,"pt_fare":4.05},{"task_id":38,"block":4,"is_holdout":0,"pers_acc":3,"pers_wait":1,"pers_ivt":14,"pers_fare":3.0,"shar_acc":3,"shar_wait":8,"shar_ivt":14,"shar_fare":2.0,"shar_occ":1,"concept":0,"pt_acc":10,"pt_wait":7,"pt_ivt":25,"taxi_acc":2,"taxi_wait":11,"taxi_ivt":14,"taxi_fare":22.0,"car_acc":8,"car_ivt":14,"car_cost":10.0,"pt_fare":4.05},{"task_id":39,"block":4,"is_holdout":0,"pers_acc":3,"pers_wait":1,"pers_ivt":10,"pers_fare":5.0,"shar_acc":3,"shar_wait":8,"shar_ivt":10,"shar_fare":3.0,"shar_occ":3,"concept":0,"pt_acc":6,"pt_wait":11,"pt_ivt":30,"taxi_acc":2,"taxi_wait":11,"taxi_ivt":21,"taxi_fare":17.5,"car_acc":8,"car_ivt":21,"car_cost":6.5,"pt_fare":4.05},{"task_id":40,"block":4,"is_holdout":0,"pers_acc":3,"pers_wait":1,"pers_ivt":14,"pers_fare":6.0,"shar_acc":3,"shar_wait":8,"shar_ivt":14,"shar_fare":1.5,"shar_occ":2,"concept":0,"pt_acc":6,"pt_wait":5,"pt_ivt":30,"taxi_acc":0,"taxi_wait":7,"taxi_ivt":21,"taxi_fare":27.5,"car_acc":2,"car_ivt":17,"car_cost":6.5,"pt_fare":4.05},{"task_id":41,"block":1,"is_holdout":1,"pers_acc":6,"pers_wait":3,"pers_ivt":12,"pers_fare":4.0,"shar_acc":6,"shar_wait":5,"shar_ivt":12,"shar_fare":2.0,"shar_occ":2,"concept":0,"pt_acc":6,"pt_wait":7,"pt_ivt":25,"taxi_acc":2,"taxi_wait":7,"taxi_ivt":17,"taxi_fare":22.0,"car_acc":5,"car_ivt":17,"car_cost":8.0,"pt_fare":4.05},{"task_id":42,"block":2,"is_holdout":1,"pers_acc":6,"pers_wait":3,"pers_ivt":12,"pers_fare":5.0,"shar_acc":6,"shar_wait":5,"shar_ivt":12,"shar_fare":2.5,"shar_occ":1,"concept":0,"pt_acc":6,"pt_wait":7,"pt_ivt":25,"taxi_acc":2,"taxi_wait":7,"taxi_ivt":17,"taxi_fare":22.0,"car_acc":5,"car_ivt":17,"car_cost":8.0,"pt_fare":4.05},{"task_id":43,"block":3,"is_holdout":1,"pers_acc":6,"pers_wait":3,"pers_ivt":12,"pers_fare":3.0,"shar_acc":6,"shar_wait":5,"shar_ivt":12,"shar_fare":1.5,"shar_occ":4,"concept":0,"pt_acc":6,"pt_wait":7,"pt_ivt":25,"taxi_acc":2,"taxi_wait":7,"taxi_ivt":17,"taxi_fare":22.0,"car_acc":5,"car_ivt":17,"car_cost":8.0,"pt_fare":4.05},{"task_id":44,"block":4,"is_holdout":1,"pers_acc":6,"pers_wait":3,"pers_ivt":12,"pers_fare":6.0,"shar_acc":6,"shar_wait":5,"shar_ivt":12,"shar_fare":3.0,"shar_occ":3,"concept":0,"pt_acc":6,"pt_wait":7,"pt_ivt":25,"taxi_acc":2,"taxi_wait":7,"taxi_ivt":17,"taxi_fare":22.0,"car_acc":5,"car_ivt":17,"car_cost":8.0,"pt_fare":4.05}],"gameB":[{"b_task_id":1,"block":1,"now_occ":3,"next_occ":1,"next_wait":9,"upgrade_extra":1.0,"booked_fare":2.5},{"b_task_id":2,"block":1,"now_occ":3,"next_occ":0,"next_wait":6,"upgrade_extra":3.0,"booked_fare":2.5},{"b_task_id":3,"block":1,"now_occ":1,"next_occ":0,"next_wait":3,"upgrade_extra":3.0,"booked_fare":2.5},{"b_task_id":4,"block":1,"now_occ":2,"next_occ":1,"next_wait":9,"upgrade_extra":1.0,"booked_fare":2.5},{"b_task_id":5,"block":2,"now_occ":2,"next_occ":1,"next_wait":3,"upgrade_extra":3.0,"booked_fare":2.5},{"b_task_id":6,"block":2,"now_occ":1,"next_occ":0,"next_wait":9,"upgrade_extra":1.0,"booked_fare":2.5},{"b_task_id":7,"block":2,"now_occ":3,"next_occ":1,"next_wait":9,"upgrade_extra":3.0,"booked_fare":2.5},{"b_task_id":8,"block":2,"now_occ":3,"next_occ":0,"next_wait":3,"upgrade_extra":1.0,"booked_fare":2.5},{"b_task_id":9,"block":3,"now_occ":3,"next_occ":0,"next_wait":9,"upgrade_extra":3.0,"booked_fare":2.5},{"b_task_id":10,"block":3,"now_occ":1,"next_occ":0,"next_wait":9,"upgrade_extra":3.0,"booked_fare":2.5},{"b_task_id":11,"block":3,"now_occ":3,"next_occ":1,"next_wait":3,"upgrade_extra":1.0,"booked_fare":2.5},{"b_task_id":12,"block":3,"now_occ":2,"next_occ":1,"next_wait":3,"upgrade_extra":1.0,"booked_fare":2.5},{"b_task_id":13,"block":4,"now_occ":3,"next_occ":0,"next_wait":3,"upgrade_extra":3.0,"booked_fare":2.5},{"b_task_id":14,"block":4,"now_occ":3,"next_occ":0,"next_wait":9,"upgrade_extra":1.0,"booked_fare":2.5},{"b_task_id":15,"block":4,"now_occ":1,"next_occ":0,"next_wait":3,"upgrade_extra":1.0,"booked_fare":2.5},{"b_task_id":16,"block":4,"now_occ":2,"next_occ":1,"next_wait":9,"upgrade_extra":3.0,"booked_fare":2.5}]}};
 const INTL = CFG.variant === "intl";                 // international version: no London residence questions
-const KEY = "gw_sp_" + CFG.mode + (INTL ? "_intl" : "") + "_" + CFG.version;
+const KEY_BASE = "gw_sp_" + CFG.mode + (INTL ? "_intl" : "") + "_";
+const KEY = KEY_BASE + CFG.design_version;           // same design = same saved state, whatever the wording version
+const LEGACY_KEYS = ["1.3.2", "1.3.1", "1.3.0"].map(v => KEY_BASE + v);   // keys used before 1.4.0
 const $ = (s, el = document) => el.querySelector(s);
 const $$ = (s, el = document) => Array.from(el.querySelectorAll(s));
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -252,11 +264,12 @@ const Q = {
   concession: {label:"Do you have a travel concession?", opts:[[1,"No"],[2,"Freedom Pass or 60+ Oyster"],[3,"Student or Zip card"],[4,"Disabled person's pass"],[5,"Another concession"],[9,"Prefer not to say"]]},
   car_own: {label:"How many cars or vans does your household own or have regular use of?", hint:"Include company cars.", opts:[[1,"None"],[2,"One"],[3,"Two or more"]]},
   licence: {label:"Do you have a full driving licence?", opts:[[1,"Yes"],[2,"No"]]},
-  car_avail: {label:"Could you use a car for a trip like this?", opts:[[1,"Yes, always"],[2,"Sometimes"],[3,"No"]], showIf: a => a.licence === 1},
-  group_size: {label:"When you make local trips with friends or family, how many of you usually travel together?", hint:"Count yourself too.", opts:[[1,"I nearly always travel alone"],[2,"2 people"],[3,"3 people"],[4,"4 people"],[5,"5 or 6 people"]]},
-  concept_pref: {label:"If you used a Shared pod, which would you prefer?", opts:[[1,"Ride Matching: the app tells me which pod to get into"],[2,"Named Routes: I get into a pod showing my destination"],[3,"No preference"],[9,"Not sure"]]},
-  group3_share: {label:"Up to what price each would your group choose the Shared pod?", hint:"The Personal pod costs £15 in total, equivalent to £5 each.", opts:[[1,"£5 each, the same as the Personal pod"],[2,"£4 each (saving £1 each)"],[3,"£3 each (saving £2 each)"],[4,"Only at £2 each or less (saving £3 or more each)"],[5,"We would not share, even if it was cheaper"],[9,"Not sure"]]},
-  comprehension: {label:"In a Shared Glydways pod, what happens during your trip?", opts:[[1,"It stops on the way to pick up more people"],[2,"It goes straight to your destination with the people already on board"],[3,"It follows a bus route and stops at every stop"]]},
+  car_avail: {label:"Could you use a car for a short local trip on a weekday morning?", opts:[[1,"Yes, always"],[2,"Sometimes"],[3,"No"]], showIf: a => a.licence === 1},
+  group_size: {label:"When you make local trips with friends or family, how many of you usually travel together in the same vehicle?", hint:"Count yourself too.", opts:[[1,"I nearly always travel alone"],[2,"2 people"],[3,"3 people"],[4,"4 people"],[5,"5 or 6 people"]]},
+  concept_pref: {label:"If you used a shared pod, which would you prefer?", opts:[[1,"Ride Matching: the app tells me which pod to get into"],[2,"Named Routes: I get into a pod showing my destination"],[3,"No preference"],[9,"Not sure"]]},
+  group3_share: {label:"Up to what price would your group choose the shared pod?", hint:"The personal pod costs £15 in total (£5 each).", opts:[[1,"Shared pod at £15 total (£5 each), the same as the personal pod"],[2,"Shared pod at £12 total (£4 each)"],[3,"Shared pod at £9 total (£3 each)"],[4,"Shared pod only at £6 total (£2 each) or less"],[5,"We would not share, even if it was cheaper"],[9,"Not sure"]]},
+  comprehension: {label:"In a shared Glydways pod, what happens during your trip?", opts:[[1,"It stops on the way to pick up more people"],[2,"It goes straight to your destination with the people already on board"],[3,"It follows a bus route and stops at every stop"]]},
+  traffic_unc: {label:"For this trip, how much would uncertainty about traffic affect your choice?", opts:[[1,"Not at all"],[2,"A little"],[3,"A lot"],[9,"Not sure"]]},
   age_band: {label:"How old are you?", opts:[[1,"18 to 24"],[2,"25 to 34"],[3,"35 to 44"],[4,"45 to 54"],[5,"55 to 64"],[6,"65 or over"]]},
   gender: {label:"How would you describe your gender?", opts:[[1,"Woman"],[2,"Man"],[3,"In another way"],[9,"Prefer not to say"]]},
   employment: {label:"What is your work status?", opts:[[1,"Employed full-time"],[2,"Employed part-time"],[3,"Self-employed"],[4,"Student"],[5,"Retired"],[6,"Not working"],[7,"Something else"]]},
@@ -275,12 +288,29 @@ function newState() {
   return {rid: rid(), block: null, block_source: "", started_at: new Date().toISOString(), screen: 0, answers: {},
     choiceA: {}, choiceB: {}, rt: {}, orderA: [], orderB: [], submitted: false, ref: "", is_test: TEST ? 1 : 0, out: null};
 }
-function load() { try { return JSON.parse(localStorage.getItem(KEY)); } catch (e) { return null; } }
+function load() {
+  try {
+    const s = JSON.parse(localStorage.getItem(KEY)); if (s) return s;
+    for (const k of LEGACY_KEYS) {                     // someone who already sent answers with an earlier version
+      const o = JSON.parse(localStorage.getItem(k)); if (o && o.submitted) return o;
+    }
+  } catch (e) {}
+  return null;
+}
 function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
 let S = load() || newState();
 if (TEST) S.is_test = 1;
 if (S._sendState === "sending") S._sendState = "error";   // page was closed mid-send
 
+// Ask the server for the least-used block as soon as the page opens. Apps Script can take several
+// seconds to wake up, so starting early means the answer is usually back before consent is given.
+let blockReq = null;
+function requestBlock() {
+  if (!blockReq && CFG.endpoint && !S.block)
+    blockReq = fetch(CFG.endpoint + "?action=block").then(r => r.json())
+      .then(j => (j && [1, 2, 3, 4].includes(j.block)) ? j.block : null).catch(() => null);
+  return blockReq;
+}
 function assignBlock(done) {
   if (S.block) return done();
   const setOrder = () => {
@@ -291,14 +321,14 @@ function assignBlock(done) {
     S.orderB = CFG.gameB_enabled ? shuffle(CFG.design.gameB.filter(t => t.block === S.block).map(t => t.b_task_id)) : [];
     save(); buildScreens(); done();
   };
-  const fallback = () => { if (!S.block) { S.block = 1 + Math.floor(Math.random() * 4); S.block_source = "random"; setOrder(); } };
-  if (!CFG.endpoint) return fallback();
-  const ctl = new AbortController(); const timer = setTimeout(() => ctl.abort(), 2500);
-  fetch(CFG.endpoint + "?action=block", {signal: ctl.signal}).then(r => r.json()).then(j => {
-    clearTimeout(timer);
-    if (!S.block && j && [1, 2, 3, 4].includes(j.block)) { S.block = j.block; S.block_source = "server"; setOrder(); } else fallback();
-  }).catch(() => { clearTimeout(timer); fallback(); });
+  const use = (b, src) => { if (S.block) return; S.block = b || 1 + Math.floor(Math.random() * 4); S.block_source = b ? src : "random"; setOrder(); };
+  const req = requestBlock();
+  if (!req) return use(null);
+  let settled = false;
+  const timer = setTimeout(() => { if (!settled) { settled = true; use(null); } }, 6000);   // give up after 6 s
+  req.then(b => { if (settled) return; settled = true; clearTimeout(timer); use(b, "server"); });
 }
+requestBlock();
 
 /* ------------------------------------------------------------ screens */
 let SCREENS = [];
@@ -306,7 +336,7 @@ function buildScreens() {
   SCREENS = ["consent", "eligibility", "travel", "household", "about", "explain", "comprehension", "journey"];
   S.orderA.forEach((id, i) => SCREENS.push("A:" + i));
   if (S.orderB.length) { SCREENS.push("bintro"); S.orderB.forEach((id, i) => SCREENS.push("B:" + i)); }
-  SCREENS.push("party", "sharepref");
+  SCREENS.push("party", "sharepref", "traffic");
   if (CFG.pilot_questions) SCREENS.push("pilot");
   SCREENS.push("submit");
 }
@@ -336,8 +366,8 @@ function feedbackHTML() {
   const a = S.answers.comprehension_seen;
   if (!a) return `<div id="fb"></div>`;
   return S.answers.comprehension === 2
-    ? `<div id="fb" class="feedback ok">That's right. A Shared pod goes straight to your destination. There are no detours and no stops on the way.</div>`
-    : `<div id="fb" class="feedback no">Not quite. A Shared pod goes straight to your destination with the people already on board. There are no detours and no stops on the way.</div>`;
+    ? `<div id="fb" class="feedback ok">That's right. A shared pod goes straight to your destination. There are no detours and no stops on the way.</div>`
+    : `<div id="fb" class="feedback no">Not quite. A shared pod goes straight to your destination with the people already on board. There are no detours and no stops on the way.</div>`;
 }
 const PAGEQ = INTL ? {
   eligibility: ["age18"],
@@ -351,17 +381,24 @@ const PAGEQ = INTL ? {
 Object.assign(PAGEQ, {
   party: ["group3_share"],
   sharepref: ["concept_pref"],
+  traffic: ["traffic_unc"],
   comprehension: ["comprehension"],
   about: ["age_band", "gender", "employment"],
   pilot: ["pilot_clear", "pilot_realism", "pilot_comment"]
 });
 if (INTL) {                                            // wording that assumes a London resident
-  Q.usual_mode = Object.assign({}, Q.usual_mode, {opts: Q.usual_mode.opts.map(o => o[0] === 4 ? [4, "Metro, subway or train"] : o)});
-  Q.car_avail = Object.assign({}, Q.car_avail, {label: "Could you use a car for a trip like this where you live?"});
+  Q.usual_mode = Object.assign({}, Q.usual_mode, {label: "Where you live, how do you usually travel on weekdays?",
+    opts: Q.usual_mode.opts.map(o => o[0] === 4 ? [4, "Metro, subway or train"] : o)});
+  Q.car_avail = Object.assign({}, Q.car_avail, {label: "Where you live, could you use a car for a short local trip on a weekday morning?"});
 }
 function visibleQs(screen) { return (PAGEQ[screen] || []).filter(id => !Q[id].showIf || Q[id].showIf(S.answers)); }
 
 const TRIP_SVG = `<svg width="46" height="12" viewBox="0 0 46 12" aria-hidden="true"><line x1="5" y1="6" x2="41" y2="6" stroke="#0B6E4F" stroke-width="3"/><circle cx="5" cy="6" r="4" fill="#fff" stroke="#18212B" stroke-width="2"/><circle cx="23" cy="6" r="3" fill="#fff" stroke="#18212B" stroke-width="2"/><circle cx="41" cy="6" r="4" fill="#fff" stroke="#18212B" stroke-width="2"/></svg>`;
+const STEP_SVG = {   // simple line drawings for the "How it works" steps
+  walk: `<svg viewBox="0 0 48 48" width="44" height="44" aria-hidden="true"><circle cx="26" cy="8" r="4.5" fill="#18212B"/><path d="M24 15l-6 10 6 4-3 13M24 15l5 9 7 2M21 29l-7 11" fill="none" stroke="#18212B" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  book: `<svg viewBox="0 0 48 48" width="44" height="44" aria-hidden="true"><rect x="6" y="6" width="17" height="30" rx="3.5" fill="none" stroke="#18212B" stroke-width="3"/><path d="M11 30h7" stroke="#18212B" stroke-width="3" stroke-linecap="round"/><path d="M10 14h9M10 19h6" stroke="#0B6E4F" stroke-width="3" stroke-linecap="round"/><rect x="28" y="12" width="14" height="30" rx="2" fill="#E4F2EC" stroke="#18212B" stroke-width="3"/><rect x="31" y="16" width="8" height="7" fill="#0B6E4F"/></svg>`,
+  ride: `<svg viewBox="0 0 48 48" width="44" height="44" aria-hidden="true"><path d="M7 30c0-9 6-16 17-16s17 7 17 16v3H7z" fill="#E4F2EC" stroke="#18212B" stroke-width="3" stroke-linejoin="round"/><path d="M14 23h20" stroke="#0B6E4F" stroke-width="4" stroke-linecap="round"/><circle cx="15" cy="35" r="3.5" fill="#18212B"/><circle cx="33" cy="35" r="3.5" fill="#18212B"/><path d="M4 41h40" stroke="#0B6E4F" stroke-width="3" stroke-linecap="round"/></svg>`
+};
 const CAR_SVG = `<svg class="ico" viewBox="0 0 84 58" role="img" aria-label="Car"><rect width="84" height="58" fill="#E8ECEF"/><path d="M14 38h56v-8l-8-3-7-9H29l-8 9-7 3z" fill="#5B6B7A"/><path d="M31 20h9v8H25zm13 0h9l6 8H44z" fill="#DDE6EE"/><circle cx="26" cy="39" r="6" fill="#18212B"/><circle cx="58" cy="39" r="6" fill="#18212B"/><circle cx="26" cy="39" r="2.5" fill="#C9D1D8"/><circle cx="58" cy="39" r="2.5" fill="#C9D1D8"/></svg>`;
 
 const SEATS = 4, STAND = 2;                          // a pod: 4 seats + room for 2 standing
@@ -374,9 +411,9 @@ const NA = `<span class="na" aria-hidden="true">–</span>`;
 const others = n => n === 0 ? "None" : n === 1 ? "1 other" : n + " others";
 function headA() {
   return `<div class="cmp-head" aria-hidden="true">
-    <div class="h-opt">Option</div><div class="h-key">Total time</div><div class="h-key">Price</div>
-    <div class="h-share">Sharing with</div><div class="h-group">Time (minutes)</div>
-    <div class="h-sub first">Walk</div><div class="h-sub">Wait</div><div class="h-sub">Travel</div></div>`;
+    <div class="h-opt">Option</div><div class="h-share">Sharing with</div><div class="h-key">Price</div>
+    <div class="h-group">Time (minutes)</div>
+    <div class="h-sub total">Total time</div><div class="h-sub first">Walk</div><div class="h-sub">Wait</div><div class="h-sub">Travel</div></div>`;
 }
 function rowA(alt, name, pic, walk, wait, travel, price, share, label, opts = {}) {
   const total = walk + wait + travel;
@@ -386,9 +423,9 @@ function rowA(alt, name, pic, walk, wait, travel, price, share, label, opts = {}
     aria-label="${label}. Total journey time ${total} minutes. Price ${money(price)}. Walking ${walk}, waiting ${wait}, travelling ${travel} minutes.${disabled ? " Not available to you." : ""}">
     <div class="c c-radio"><span class="radio" aria-hidden="true"></span></div>
     <div class="c c-opt"><span class="pic">${pic}</span><b>${name}</b>${disabled ? '<span class="off">Not available to you</span>' : ""}</div>
-    <div class="c c-key"><span class="num">${total}</span><span class="unit">min</span></div>
-    <div class="c c-key c-price"><span class="num">${money(price)}</span></div>
     <div class="c c-share">${share}</div>
+    <div class="c c-key c-price"><span class="num">${money(price)}</span></div>
+    <div class="c c-key c-total"><span class="num">${total}</span><span class="unit">min</span></div>
     <div class="c c-sub first"><span class="num">${walk}</span></div>
     <div class="c c-sub"><span class="num">${wait}</span></div>
     <div class="c c-sub"><span class="num">${travel}</span></div>
@@ -411,7 +448,8 @@ function tableA(t) {
       <p><b>Pictures:</b> each pod is shown as you would enter it, with other passengers already on board. A pod has 4 seats and room for 2 people standing. If all 4 seats are taken, you stand. – means it does not apply.</p>
       <p><b>Public transport:</b> ${CFG.pt_label.charAt(0).toLowerCase() + CFG.pt_label.slice(1)}, standard adult fare.</p>
       <p><b>Taxi or app car:</b> black cab, or a car booked on an app such as Uber or Bolt, door to door.</p>
-      <p><b>Your car:</b> drive and park. The price is fuel and 2 hours' parking.</p>
+      <p><b>Your car:</b> drive and park. The time includes parking and walking from the car park; assume a space is available. The price is fuel and 2 hours' parking.</p>
+      <p>Car and taxi times are for normal 8am traffic.</p>
     </div>`;
 }
 function tableB(t) {
@@ -429,11 +467,12 @@ function tableB(t) {
   };
   return `<div class="cmp b cards" role="radiogroup" aria-label="Station options">
     <div class="cmp-head" aria-hidden="true"><div class="h-opt">What you do</div><div class="h-key">Leaves</div><div class="h-key">Extra to pay</div><div class="h-share">Sharing with</div></div>
-    ${row(1, "Board the Shared pod now", "Now", "£0", t.now_occ, false)}
-    ${row(2, "Wait for the next Shared pod", "In " + t.next_wait + " min", "£0", t.next_occ, false)}
-    ${row(3, "Pay more for a Personal pod", "Now", "+" + money(t.upgrade_extra), 0, true)}
+    ${row(1, "Board the shared pod now", "Now", "£0", t.now_occ, false)}
+    ${row(2, "Wait for the next shared pod", "In " + t.next_wait + " min", "£0", t.next_occ, false)}
+    ${row(3, "Pay more for a personal pod", "Now", "+" + money(t.upgrade_extra), 0, true)}
   </div>
-  <div class="legend"><p><b>Pictures:</b> each pod is shown as you would enter it, with other passengers already on board.</p></div>`;
+  <div class="legend"><p class="sure">The app shows who has booked the next pod. It leaves with exactly these passengers. Nobody else can join.</p>
+    <p><b>Pictures:</b> each pod is shown as you would enter it, with other passengers already on board.</p></div>`;
 }
 
 function screenHTML(s) {
@@ -460,29 +499,39 @@ function screenHTML(s) {
     <figure class="hero"><img src="img/pod_scene.jpg" alt="Small driverless pods travelling on their own raised route between city buildings" width="904" height="508">
       <figcaption>Artist's impression of Glydways pods on their own route. This is not a picture of Sutton.</figcaption></figure>
     <p class="lead">Glydways pods are small, driverless electric vehicles. They run on their own dedicated route, away from other traffic. Each pod has 4 seats and room for 2 people standing, so it takes up to 6 passengers.</p>
-    <p>You walk to a Glydways station and book a pod on an app or at the station. Personal and Shared pods leave from the same station and take the same route, so the walk and the ride take the same time. There are two types.</p>
+    <h2>How it works</h2>
+    <ol class="steps" aria-label="How it works">
+      <li>${STEP_SVG.walk}<span><b>1.</b> Walk to a Glydways station.</span></li>
+      <li>${STEP_SVG.book}<span><b>2.</b> Book a pod on the app or at a kiosk.</span></li>
+      <li>${STEP_SVG.ride}<span><b>3.</b> Ride straight to your destination.</span></li>
+    </ol>
+    <p>Personal and shared pods use the same stations and the same route, so the walk and the ride take the same time.</p>
+    <figure class="minimap"><img src="${CFG.static_map}" width="720" height="1151" alt="Small map of the imaginary Glydways route from Sutton town centre, past St Helier Hospital, to South Wimbledon.">
+      <figcaption>The imaginary route for this survey. You will see the map again, larger, before the choices.</figcaption></figure>
+    <p>There are two types of pod.</p>
     <div class="pods">
       <div class="pod"><img src="img/pod_p1.jpg" alt="A Glydways pod with one passenger inside" width="720" height="511" loading="lazy">
         <div><h3>Personal pod</h3><p>Just you, or you and the people you are travelling with. Nobody else gets in.</p></div></div>
       <div class="pod"><img src="img/pod_p4.jpg" alt="A Glydways pod with four passengers, all seated" width="720" height="511" loading="lazy">
         <div><h3>Shared pod</h3><p>You share with other passengers going to the same place. It goes straight to your destination. There are no detours and no stops on the way.</p></div></div>
       <div class="pod"><img src="img/pod_p5.jpg" alt="A busy Glydways pod: four passengers seated and one standing" width="720" height="511" loading="lazy">
-        <div><h3>A busy Shared pod</h3><p>If all 4 seats are taken, the next person to get in stands.</p></div></div>
+        <div><h3>A busy shared pod</h3><p>If all 4 seats are taken, the next person to get in stands.</p></div></div>
     </div>
-    <p class="note">In the choices, each pod is shown as you would enter it, with other passengers already on board. A Personal pod is empty when you get in.</p>
+    <p class="note">In the choices, each pod is shown as you would enter it, with other passengers already on board. A personal pod is empty when you get in.</p>
     <p class="note">This service is imaginary. We want to know what you would choose if it existed.</p>`;
   if (s === "comprehension") return `<h1>A quick check</h1><p class="muted">This helps us know the explanation was clear.</p>` + qHTML("comprehension");
   if (s === "journey") return `
     <h1>Your trip</h1>
-    <p class="lead">${INTL ? "Imagine you are in London and need" : "Imagine you need"} to travel from <b>Sutton town centre</b> to <b>South Wimbledon station</b> on a weekday morning. You leave at about 8am and stay for about 2 hours.</p>
+    <p class="lead">${INTL ? "Imagine you are in London and need" : "Imagine you need"} to travel from <b>Sutton town centre</b> to <b>South Wimbledon station</b> on a weekday morning. You leave at about 8am, stay for about 2 hours, then return to Sutton. You have no other stops to make.</p>
     <figure class="routemap" id="map"><a href="${CFG.static_map}" target="_blank" rel="noopener">
       <img src="${CFG.static_map}" width="720" height="1151" alt="Map of an imaginary Glydways route from Sutton town centre, past St Helier Hospital and Morden, to South Wimbledon. It runs just east of the Northern line between Morden and South Wimbledon."></a>
       <figcaption>Tap the map to see it larger.</figcaption></figure>
     <p class="small muted">The green line is an imaginary Glydways route. It runs from Sutton, past St Helier Hospital, to South Wimbledon.</p>
     <div class="panel"><h2 style="margin-top:0">What to do</h2><ul class="plain">
-      <li>You will see ${nA} screens. Each one shows a table with five ways to make this trip, one per row.</li>
+      <li>You will make this choice ${nA} times, with different times and prices each time. Most people take about 3 minutes. Each table shows five ways to make this trip, one per row.</li>
       <li>Compare the rows and tap the one you would most likely use. Then press Next.</li>
-      <li>The times and prices change each time. There are no right or wrong answers.</li>
+      <li><b>Walk</b> is all the walking in the trip, starting from Sutton town centre: to the Glydways station, bus stop or car park, and on to your destination.</li>
+      <li>There are no right or wrong answers.</li>
       <li>Prices are for one adult making this one trip${INTL ? ", in British pounds (£)" : ""}.</li>
       ${carOK() ? "" : "<li>You told us you cannot use a car, so the car option will be greyed out.</li>"}</ul></div>`;
   if (s.startsWith("A:")) {
@@ -494,13 +543,13 @@ function screenHTML(s) {
       ${tableA(t)}`;
   }
   if (s === "bintro") return `<h1>At the Glydways station</h1>
-    <p class="lead">Now imagine you have booked a <b>Shared pod</b> for ${money(CFG.booked_fare)}. You arrive at the station.</p>
+    <p class="lead">Now imagine you have booked a <b>shared pod</b> for ${money(CFG.booked_fare)} for the same trip. The ride takes about 12 minutes. You arrive at the station.</p>
     <p>You will see ${nB} short situations. In each one, choose what you would do.</p>
-    <p class="muted">Other passengers shown for the next pod are what you would get. Nobody else can join it.</p>`;
+    <p class="muted">The app shows who has booked the next pod. It leaves with exactly these passengers. Nobody else can join.</p>`;
   if (s.startsWith("B:")) {
     const i = +s.slice(2); const t = taskB(i);
     return `<p class="small muted count">Station question ${i + 1} of ${nB}</p>
-      <div class="context">You booked a Shared pod for ${money(t.booked_fare)}. A Shared pod is ready at the platform.</div>
+      <div class="context">You booked a shared pod for ${money(t.booked_fare)}. A shared pod is ready at the platform.</div>
       <h1 class="task-q">What would you do?</h1>
       <p class="task-help">Tap the row you would choose.</p>
       ${tableB(t)}`;
@@ -509,17 +558,19 @@ function screenHTML(s) {
   if (s === "party") return `<h1>Travelling as a group</h1>
     <p class="lead">Imagine you are making the same trip with <b>2 friends or family members</b>. There are 3 of you.</p>
     <div class="panel"><p style="margin-top:0">Your group can book:</p><ul class="plain">
-      <li><b>a Personal pod</b> for just the 3 of you, for <b>£15 total</b> (equivalent to £5 each), or</li>
-      <li><b>a Shared pod</b>, where <b>1 other passenger</b> going to the same place joins you. Everyone gets a seat.</li></ul>
+      <li><b>a personal pod</b> for just the 3 of you, for <b>£15 total</b> (equivalent to £5 each), or</li>
+      <li><b>a shared pod</b>, where <b>1 other passenger</b> going to the same place joins you. Everyone gets a seat.</li></ul>
       <p style="margin-bottom:0">Both pods leave at the same time and take the same time to get there.</p></div>
-    <figure class="hero"><img src="img/pod_p4.jpg" alt="The Shared pod for your group: your 3 people and 1 other passenger, all seated" width="720" height="511" loading="lazy">
-      <figcaption>The Shared pod: the 3 of you and 1 other passenger, all seated.</figcaption></figure>` + PAGEQ.party.map(qHTML).join("");
-  if (s === "sharepref") return `<h1>Finding your Shared pod</h1>
-    <p class="lead">A Shared pod service could work in one of two ways.</p>
+    <figure class="hero"><img src="img/pod_p4.jpg" alt="The shared pod for your group: your 3 people and 1 other passenger, all seated" width="720" height="511" loading="lazy">
+      <figcaption>The shared pod: the 3 of you and 1 other passenger, all seated.</figcaption></figure>` + PAGEQ.party.map(qHTML).join("");
+  if (s === "sharepref") return `<h1>Finding your shared pod</h1>
+    <p class="lead">A shared pod service could work in one of two ways.</p>
     <div class="concepts">
       <div><b>Ride Matching</b>The app puts you in a pod with people going to the same place. It tells you which pod to get into.</div>
       <div><b>Named Routes</b>Pods at the station show their destination. You get into one that shows yours, together with other people going to the same place.</div>
     </div>` + PAGEQ.sharepref.map(qHTML).join("");
+  if (s === "traffic") return `<h1>One last question</h1>
+    <p class="lead">Think about the trip from Sutton town centre to South Wimbledon at about 8am.</p>` + PAGEQ.traffic.map(qHTML).join("");
   if (s === "pilot") return `<h1>Help us improve the survey</h1><p class="muted">These questions only appear in the test version.</p>` + PAGEQ.pilot.map(qHTML).join("");
   if (s === "submit") return submitHTML();
   if (s === "done") return `<h1>Thank you</h1><p class="lead">Your answers have been received.</p>
